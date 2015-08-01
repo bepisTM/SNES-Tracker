@@ -175,34 +175,11 @@ namespace report
   Src src[MAX_SRCN_ENTRIES];
   Sdl_Spc_Report sdlSpcReport;
 
-  // backup colors is no longer an issue
-  int backup_color(int addr)
-  {
-    /*int r,g,b;
-    int idx = (((addr)&0xff00)<<4); idx+= ((addr)%256)<<3; 
-    r=report::memsurface.data[idx];
-    g=report::memsurface.data[idx+1];
-    b=report::memsurface.data[idx+2];
-    bcolor = (r << 16) | (g << 8) | b;
-    //fprintf(stderr, "bcol = %03x\n", bcolor);
-    return bcolor;*/
-    return 0;
-  }
-
-
 void restore_color(int addr)
 {
   int idx = (((addr)&0xff00)<<4); 
-  idx+= ((addr)%256)<<3;
-  /*
-  int c[3];
-  c[0] = (bcolor >> 16);
-  c[1] = (bcolor >> 8) & 0xff;
-  c[2] = bcolor & 0xff;*/
-
-  //fprintf(stderr, "r = %d, g = %d, b = %d\n", c[0],c[1],c[2]);
-  //SDL_GetRGB(bcolor, sdl_surface->format, &c[0], &c[1], &c[2]); 
-  //Uint8 c = r1
+  idx += ((addr)%256)<<3;
+  
   for (int i=0; i < 3; i++) 
   { 
     report::memsurface.cdata[idx+i]=0; 

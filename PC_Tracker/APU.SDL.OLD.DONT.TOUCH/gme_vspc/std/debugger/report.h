@@ -23,6 +23,7 @@ public:
   void init_video();
   void fade_arrays();
   
+  // [c] is for drawing the cursor atop, with black as alpha
   unsigned char *data, *cdata;
   SDL_Surface *sdl_surface, *sdl_csurface;
 };
@@ -57,8 +58,6 @@ namespace report
     uint16_t brr_loop_end=0xffff;
   };
   extern Src src[MAX_SRCN_ENTRIES];
-
-  int backup_color(int addr);
 
   void restore_color(int addr);
 }
