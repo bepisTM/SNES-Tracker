@@ -17,17 +17,10 @@ struct Memory : public BaseD, public Render_Context, public Player_Context
   void set_addr(int i);
   void add_addr(int i);
 
-  
-
   // All of the static variables are stuff I want shared between the 
   // Main Memory Area and Mouse Hexdump area
-  //static Mem_Cursor memcursor;
   static Cursor cursor;
-
-  //static Music_Player *player;
-  //uint8_t *IAPURAM;
-  
-  static Uint16 address; //=0x0000;
+  static Uint16 address;
   static Uint16 addr_being_edited;
   static int rel_x;
   static int rel_y;
