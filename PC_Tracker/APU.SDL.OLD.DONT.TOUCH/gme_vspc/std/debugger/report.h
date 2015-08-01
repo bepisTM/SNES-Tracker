@@ -44,8 +44,8 @@ namespace report
   extern int last_pc;
   extern int bcolor; // backup color
   extern Mem_Surface memsurface;
-  extern unsigned char used2[0x101];
-  extern unsigned char used[0x10006];
+  extern unsigned char used2[0x101];  // used for memory usage thingy
+  extern unsigned char used[0x10006]; // used for memory usage thingy
   extern Sdl_Spc_Report sdlSpcReport;
 
   struct Src

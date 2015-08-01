@@ -1181,6 +1181,7 @@ void Main_Window::run()
     tmp_profile->process();
   }
 
+  // update voice srcn.. but that could be looked up on a needs basis
   for (uint8_t voice=0; voice < MAX_VOICES; voice++)
   {
     dir = player->spc_read_dsp(dsp_reg::dir) * 0x100;
@@ -1231,7 +1232,7 @@ void Main_Window::unlock()
 
 
 Main_Window::Main_Window(int &argc, char **argv) : 
-main_memory_area(&mouseover_hexdump_area, &dir),
+main_memory_area(&mouseover_hexdump_area),
 port_tool(&mouseover_hexdump_area.cursor)
 //echo_on("on", BaseD::toggle_echo, NULL)
 {

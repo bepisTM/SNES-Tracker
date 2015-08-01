@@ -21,7 +21,7 @@ struct Main_Memory_Area : Memory
 {
 public:
   //friend class Mouse_Hexdump_Area;
-  Main_Memory_Area(Mouse_Hexdump_Area *mouse_hexdump_area, uint16_t *dir);
+  Main_Memory_Area(Mouse_Hexdump_Area *mouse_hexdump_area);
 
   void set_addr(int i);
   void set_addr_from_cursor(int x, int y);
@@ -40,7 +40,6 @@ public:
   char locked=0;
   Uint8 address_remainder=0;
   uint16_t mouse_addr=0; 
-  uint16_t *dir; // unused, should be deleted
 
   void log_the_fucking_address_for_the_fucking_context_window();
   
