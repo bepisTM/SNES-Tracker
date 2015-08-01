@@ -3,9 +3,6 @@
 
 #define CURSOR_TOGGLE_TIMEWINDOW 300 // ms
 
-
-
-
 struct Cursor
 {
   Uint8 toggle=0; // 1 = show cursor, 0 = hide
@@ -34,8 +31,6 @@ struct Mem_Cursor : public Cursor
   const int interval= 300;
   Uint8 flags=0; // 1 = show cursor, 0 = hide
   SDL_TimerID timerid=0;
-
-  
   
   // timer callback, dont worry about this
   static Uint32 cursor_timerCB(Uint32 interval, void *param);
@@ -48,8 +43,6 @@ struct Mem_Cursor : public Cursor
   char is_disabled(); 
   char is_toggled();
   void disable(char c=1);
-  void toggle_disable();
-  
-  
+  void toggle_disable(); 
 };
 

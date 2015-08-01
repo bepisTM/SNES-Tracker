@@ -25,20 +25,13 @@
     // double click code
     timerid = SDL_AddTimer(interval, &cursor_timerCB, this);
     flags=FLAG_ACTIVE | FLAG_TOGGLED;
-    /*if (timerid == timerid)
-    {
-      fprintf(stderr, "memcursor::timerID == cursor::timerid.. NOT FIXED\n");
-    }*/
-
   }
 
   void Mem_Cursor::stop_timer()
   {
-    //report::restore_color(mouse_hexdump::address);
     flags &= ~(FLAG_TOGGLED | FLAG_ACTIVE);
     SDL_RemoveTimer(timerid);
     // flags must be set to 0 to prevent drawing to screen
-    
   }
   char Mem_Cursor::is_active() { return flags & FLAG_ACTIVE; }
   char Mem_Cursor::is_disabled() { return flags & FLAG_DISABLED; }
@@ -67,8 +60,6 @@
   }
   
   
- 
-
   Uint32 Cursor::cursor_timerCB(Uint32 interval, void *param)
   {
     return ((Cursor *) param)->cursor_timer(interval); 
@@ -128,6 +119,5 @@
     }
   }
 
-  //Uint8 Cursor::
 
 
