@@ -97,6 +97,16 @@ void Timer_SDL::setCallback(timer_callback_t _callback, void *param)
 }
 
 
+/* Example Program
+
+Demonstrates Super-Awesomeness
+
+export DYLD_LIBRARY_PATH=~/Code/SDL2-2.0.3/build/.libs
+g++ -g -std=c++11 Timer.cpp -I../.. -DTIMER_SDL \
+-L$HOME/Code/SDL2-2.0.3/build/.libs -I$HOME/Code/SDL2-2.0.3/include -lSDL2
+
+*/
+
 uint32_t cb(uint32_t interval, void *p)
 {
     volatile int &var = *(volatile int *)p;
