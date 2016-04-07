@@ -1,5 +1,6 @@
 Feature Requests
 ----------------
+006 MML scripting part within tracker
 005 Hotpluggable APU emulator
 004 Hotpluggable SPC drivers
 003 Piano Roll (tracker)

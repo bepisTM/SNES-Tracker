@@ -1,11 +1,11 @@
-#include "Dsp_Window.h"
+#include "Dsp_Tab.h"
 #include "utility.h"
 #include "platform.h"
 #include "Menu_Bar.h"
 
-uint16_t Dsp_Window::dir_ram_addr;
-uint16_t *Dsp_Window::dir;
-uint16_t Dsp_Window::dir_index;
+uint16_t Dsp_Tab::dir_ram_addr;
+uint16_t *Dsp_Tab::dir;
+uint16_t Dsp_Tab::dir_index;
 
 #define print_then_inc_row(x) sdlfont_drawString(screen, x,i, tmpbuf, Colors::white); i+=CHAR_HEIGHT;
 #define print_then_inc_row_voice(x,col) sdlfont_drawString(screen, x,i, tmpbuf, col); i+=CHAR_HEIGHT;
@@ -26,9 +26,9 @@ static Uint8* get_brr_end_block(Uint8 *brr_sample)
     brr_sample+=9;
   return brr_sample;
 }
-int Dsp_Window::Loop_Clickable::toggle_loop(void *index)
+int Dsp_Tab::Loop_Clickable::toggle_loop(void *index)
 {
-  //Dsp_Window *dsp_window = BaseD::dsp_window;
+  //Dsp_Tab *Dsp_Tab = BaseD::Dsp_Tab;
   Uint8 *iindex = (Uint8*)index;
   Uint8 *brr_sample = &IAPURAM[dir[dir_index + (*iindex * 2)]];
   brr_sample = get_brr_end_block(brr_sample);
@@ -44,12 +44,12 @@ int Dsp_Window::Loop_Clickable::toggle_loop(void *index)
   else
   {
     *brr_sample |= 2;
-    //dsp_window->loop_clickable[*iindex].clickable_text.color = Colors::white;
+    //Dsp_Tab->loop_clickable[*iindex].clickable_text.color = Colors::white;
   }
   return 0;
 }
 
-Dsp_Window::Dsp_Window() : 
+Dsp_Tab::Dsp_Tab() : 
 screw_clickable("Screw Around", toggle_screw, this, Colors::nearblack)
 {
   clear_used_srcn();
@@ -59,12 +59,12 @@ screw_clickable("Screw Around", toggle_screw, this, Colors::nearblack)
   }*/
 }
 
-int Dsp_Window::toggle_screw(void *dsp_win)
+int Dsp_Tab::toggle_screw(void *dsp_win)
 {
-  Dsp_Window *dsp_window = (Dsp_Window*)dsp_win;
+  Dsp_Tab *Dsp_Tab = (Dsp_Tab*)dsp_win;
   //*is_screwing = !*is_screwing;
-  dsp_window->is_screwing = !dsp_window->is_screwing;
-  if (dsp_window->is_screwing)
+  Dsp_Tab->is_screwing = !Dsp_Tab->is_screwing;
+  if (Dsp_Tab->is_screwing)
   {
     BaseD::Hack_Spc::pause_spc();
   }
@@ -75,7 +75,7 @@ int Dsp_Window::toggle_screw(void *dsp_win)
   return 0;
 }
 
-void Dsp_Window::reset_screw()
+void Dsp_Tab::reset_screw()
 {
   is_screwing = false;
   BaseD::Hack_Spc::restore_spc();
@@ -134,7 +134,7 @@ void print_binary(SDL_Surface *screen, int x, int y, uint8_t v, bool use_colors=
   }
 }
 
-void Dsp_Window::clear_used_srcn()
+void Dsp_Tab::clear_used_srcn()
 {
   for (int i=0; i < MAX_SRCN_ENTRIES/8; i++)
   {
@@ -149,7 +149,7 @@ void Dsp_Window::clear_used_srcn()
 
 
 // helper function for the run() first run init
-void Dsp_Window::init_voice_clickable(char *str, int &x, int &i)
+void Dsp_Tab::init_voice_clickable(char *str, int &x, int &i)
 {
   static int loindex=0, hiindex=MAX_VOICES-1;
   assert (loindex < SIZEOF_VOICE_ENUM && hiindex < MAX_VOICES);
@@ -170,13 +170,13 @@ void Dsp_Window::init_voice_clickable(char *str, int &x, int &i)
   }
 }
 
-void Dsp_Window::enter_edit_mode()
+void Dsp_Tab::enter_edit_mode()
 {
   mode = MODE_EDIT_ADDR;
   cursor.start_timer();
 }
 
-void Dsp_Window::exit_edit_mode()
+void Dsp_Tab::exit_edit_mode()
 {
   mode = MODE_NAV;
   submode = NONE;
@@ -187,7 +187,7 @@ void Dsp_Window::exit_edit_mode()
 // The clickable text are dynamically calculated from the string lengths
   // it's kind of unconnected although the strings are right above for referencing...
   // the first one mainvol_l I will comment as an example: 
-void Dsp_Window::init_gen_dsp_clickable(char *str, int &x, int &i)
+void Dsp_Tab::init_gen_dsp_clickable(char *str, int &x, int &i)
 {
   static int index=0;
   assert (index < SIZEOF_GEN_DSP_ENUM);
@@ -203,7 +203,7 @@ void Dsp_Window::init_gen_dsp_clickable(char *str, int &x, int &i)
   index++;
 }
 
-void Dsp_Window::run()
+void Dsp_Tab::run()
 {
   BaseD::check_time();
 
@@ -682,7 +682,7 @@ void Dsp_Window::run()
   is_first_run=false;
 }
 
-void Dsp_Window::do_loop_point_color(int index, Uint8* brr_sample, Uint32 active_color, Uint32 inactive_color)
+void Dsp_Tab::do_loop_point_color(int index, Uint8* brr_sample, Uint32 active_color, Uint32 inactive_color)
 {
   //Uint8 *brr_sample = &IAPURAM[dir[cur_dir_index]];
   brr_sample = get_brr_end_block(brr_sample);
@@ -696,7 +696,7 @@ void Dsp_Window::do_loop_point_color(int index, Uint8* brr_sample, Uint32 active
   }
 }
 
-bool Dsp_Window::is_srcn_used(Uint8 dirnum)
+bool Dsp_Tab::is_srcn_used(Uint8 dirnum)
 {
   //uint8_t dirnum = fakerow;
   uint8_t byte = dirnum / 8, bit = dirnum % 8;
@@ -705,7 +705,7 @@ bool Dsp_Window::is_srcn_used(Uint8 dirnum)
   return false;
 }
 
-void Dsp_Window::draw()
+void Dsp_Tab::draw()
 { 
 /*
                General DSP    
@@ -749,7 +749,8 @@ envx.: $FF    envx.: $FF    envx.: $FF    envx.: $FF
 outx.: $FF    outx.: $FF    outx.: $FF    outx.: $FF        
 
 */
-  BaseD::draw_menu_bar();
+  // Menu bar drawing should occur in a "Parent" Main_Window drawing function that also calls this function
+  //BaseD::draw_menu_bar();
 
   if (mode == MODE_EDIT_ADDR)
   {
@@ -764,18 +765,9 @@ outx.: $FF    outx.: $FF    outx.: $FF    outx.: $FF
   SDL_RenderPresent(sdlRenderer);
 }
 
-int Dsp_Window::receive_event(SDL_Event &ev)
+int Dsp_Tab::receive_event(SDL_Event &ev)
 {
-  /* menu bar */
   int r;
-  if ((r=BaseD::menu_bar_events(ev)))
-  {
-    switch (r)
-    {
-      default:break;
-    }
-    return;
-  }
 
   dblclick::check_event(&ev);
   switch (ev.type)

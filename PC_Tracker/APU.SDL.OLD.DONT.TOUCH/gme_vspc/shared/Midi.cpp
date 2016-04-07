@@ -10,6 +10,12 @@ void mycallback( double deltatime, std::vector< unsigned char > *message, void *
   midi->internal_callback(deltatime, &message);
 }
 
+void Midi::setCallback(MidiCallback callback, void *userData/*=0*/)
+{
+  this->callback = callback;
+  this->userData = userData;
+}
+
 void Midi::internal_callback(double &deltatime, std::vector< unsigned char > **message)
 {
   unsigned int nBytes = (*message)->size();
@@ -54,47 +60,10 @@ void Midi::PrintSysEx( FILE *f, jdkmidi::MIDISystemExclusive *ex )
 }
 
 
+
+
 void Midi::PrintMsg( FILE *f, jdkmidi::MIDIMessage *m )
 {
-  // SNES shit
-  if (m->IsNoteOn())
-  {
-    if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
-    {
-      SDL_Event event2;
-
-      event2.type = SDL_USEREVENT;
-      event2.user.code = UserEvents::play_pitch;
-      event2.user.data1 = (void*)m->GetNote();
-      event2.user.data2 = 0;
-      SDL_PushEvent(&event2);
-      last_note_on = m->GetNote();
-    }
-  }
-  else if (m->IsNoteOff())
-  {
-    if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
-    {
-      if (m->GetNote() == last_note_on)
-      {
-        SDL_Event event2;
-
-        event2.type = SDL_USEREVENT;
-        event2.user.code = UserEvents::keyoff;
-        event2.user.data1 = (void*)m->GetNote();
-        event2.user.data2 = 0;
-        SDL_PushEvent(&event2);
-      }
-    }
-  }
-  else if (m->IsProgramChange())
-  {
-    if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
-    {
-      BaseD::instr_window->set_voice(m->GetPGValue());
-    }  
-  }
-
   int l = m->GetLength();
   
   fprintf( f, "Msg : " );

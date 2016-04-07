@@ -16,7 +16,7 @@ int mute_solo_voice(void *data);
 static const Uint8 NUM_TIMERS=3;
 
 
-struct Dsp_Window : public BaseD, public Render_Context, public Player_Context,
+struct Dsp_Window : public BaseD, public Player_Context,
 public Experience
 {
 

@@ -12,6 +12,8 @@
 
 struct Midi : public App_Settings_Context
 {
+  typedef void (*MidiCallback)( double timeStamp, std::vector<unsigned char> *message, void *userData);
+
   Midi();
   ~Midi();
 
@@ -26,6 +28,10 @@ struct Midi : public App_Settings_Context
   std::vector<std::string> available_devices;
   RtMidiIn  in;
   bool is_available=true;
+
+  void setCallback(MidiCallback callback, void *userData = 0 );
+  MidiCallback callback;
+  void *userData;
   //RtMidiOut *midiout = 0;
   Uint8 last_note_on=0;
 

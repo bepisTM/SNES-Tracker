@@ -13,10 +13,6 @@
 #include "Colors.h"
 #include "platform.h"
 #include "Main_Window.h"
-#include "Dsp_Window.h"
-#include "Experience.h"
-#include "Instrument_Window.h"
-#include "Menu_Bar.h"
 #include "gui/Window.h"
 
 typedef Uint32 SDL_WindowID_Type;
@@ -29,22 +25,16 @@ public:
   void run();
   void handle_events();
 
-  //
-  //Options_Window *options_window;
-  Menu_Bar menu_bar;
-  Main_Window main_window;
-  Dsp_Window dsp_window;
-  Instrument_Window instr_window;
-  //
   SDL_DisplayMode monitor_display_mode;
   //
   //std::map<SDL_WindowID_Type, Window *> window_map;
   Experience *sub_window_experience = NULL;
   
+  Main_Window main_window;
   Options_Window options_window;
   Spc_Export_Window spc_export_window;
-  static const int NUM_WINDOWS = 2;
-  Window *window_map[NUM_WINDOWS+1];
+  static const int NUM_WINDOWS = 3;
+  Window *window_map[NUM_WINDOWS+1];  // there's a REASON for +1 (extra NULL item)
 
   Cursors cursors;
 };

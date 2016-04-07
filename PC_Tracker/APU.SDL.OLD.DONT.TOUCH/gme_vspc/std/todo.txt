@@ -1,5 +1,26 @@
+Refactor Todo
+-------------
+002 Remove SDL implementation from BRR class
+001 Remove all references to GrandMode
+--- Removing Midi class reference
+---- I would like to register a callback function with Midi events received ..
+----- this function can be registered when in the Instrument Tab and removed upon exit
+
 New Numbered TODO List
 ----------------------
+016 [Mem_Tab] BRR sample detection seems to be broken (right click over memory area BRR)
+015 SNES Tracker window icon / OSX Dock icon / "/usr/share" icons etc.
+  usually these icons must be in a set of various dimensions
+014 BRR class does not seem appropriately designed
+  and I'm not sure how to appropriately design it / other classes.. My main concern is not to
+  embed other class objects/method calls unless explicitly required..
+  An example would be the BRR::play_sample(Instrument_Window *instr_window) <--> this should not
+  require a handle on the instrument window!!!! WTF -- That is a strange-ass dependency for a BRR class
+013 Update how-to-install docs
+  for linux: alsa-lib is likely called libasound2-dev
+  libboost-dev is likely the package name that will work (but won't provide -mt libs!)
+  libsdl2-dev
+
 012 Add ability to compile either dynamic or statically
 There is a specific concern of making sure Windows builds are distributed avoiding "DLL hell" - eg do not want
 to ship to a system and see something like "MFC34.dll is not found!"
@@ -17,7 +38,7 @@ Anyways, I'm rather content with building everything dynamically for now -- espe
 stable for me and I'm one of the only developers. It's more a long-term concern so that people have an option
 to compile statically if they so desire ..
 
-011 Response to ElHuesudoII
+011 OK Response to ElHuesudoII
 Apr 01 23:59:50 <ElHuesudoII>	does it have in-tracker brr conversion
 .. the tracker has not yet been fully designed -- I would not be surprised if the answer is 'yes'
 The answer would only be 'no' if I find a very good reason for the conversion to be done outside of the tracker.
@@ -45,7 +66,7 @@ identical to Windows/Linux -- using the new SDL_SetHint(SDL_HINT_MAC_MOUSE_FOCUS
 008 Grey out File->Export items until SPC is loaded (avoid crash)
 007 Backquote momentary keyboard shortcut to temporarily speed up emulation (at least 4x)
 006 need gfx assets!!
-005 Occasional Use after free bug when shutting down the program :X not sure how-to trigger
+005 OK Occasional Use after free bug when shutting down the program :X not sure how-to trigger
 004 Export SPC current state
 003 should start documenting keyboard shortcuts for different tabs / global etc.
 002 Switch between tabs should be possible via a keyboard shortcut (did I forget it)

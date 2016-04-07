@@ -39,10 +39,11 @@ int write_plain_brr_to_file(void *data)
   return 0;
 }
 
+// temporarily OUT-OF-ORDER
 int play_sample(void *data)
 {
   Main_Memory_Area *mma = (Main_Memory_Area*)data;
-  mma->brr.play_sample(BaseD::instr_window);
+  //mma->brr.play_sample(BaseD::instr_window);
   return 0;
 }
 

@@ -5,31 +5,23 @@
 #include "sdl_userevents.h"
 #include "gui/Cursors.h"
 
-#define L_FLAG 0
-#define R_FLAG 1
-
-Debugger::Debugger(int &argc, char **argv) : //, Music_Player *player,
-  //SDL_Window *win, SDL_Renderer *renderer, SDL_Texture *text, SDL_Surface *screen) : 
-//player(player), sdlWindow(win), sdlRenderer(renderer),sdlTexture(text),screen(screen),
-//main_memory_area(screen,player),
-//mouseover_hexdump_area(player,screen),
+Debugger::Debugger(int &argc, char **argv) :
 main_window(argc,argv)
 {
-  BaseD::main_window = &main_window;
-  BaseD::dsp_window = &dsp_window;
-  BaseD::instr_window = &instr_window;
-  BaseD::menu_bar = &menu_bar;
-  BaseD::options_window = &options_window;
-  BaseD::spc_export_window = &spc_export_window;
+  // I am naturally against "de-capsulating these window objs"
+  // BaseD::main_window = &main_window;
+  // BaseD::options_window = &options_window;
+  // BaseD::spc_export_window = &spc_export_window;
+
   BaseD::cursors = &cursors;
-  exp = &main_window;
+  //exp = &main_window;
 
   //window_map.insert( std::pair<Uint32, Window*>())
   int i=0;
+  window_map[i++] = &main_window;
   window_map[i++] = &options_window;
   window_map[i++] = &spc_export_window;
   window_map[i] = NULL;
-
   
   // Get current display mode of all displays.
   //for(i = 0; i < SDL_GetNumVideoDisplays(); ++i){

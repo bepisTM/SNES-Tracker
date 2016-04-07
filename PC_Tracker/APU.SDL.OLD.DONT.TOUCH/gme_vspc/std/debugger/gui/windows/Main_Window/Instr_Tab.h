@@ -18,9 +18,12 @@
 struct Instrument_Window : public BaseD,
 public Experience
 {
+  void midi_callback( double deltatime, std::vector< unsigned char > *message, void *userData );
   Uint32 mytime;
   bool started=false;
   Instrument_Window();
+  void activate();
+  void deactivate();
   void run();
   void draw();
   void one_time_draw();

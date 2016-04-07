@@ -8,16 +8,11 @@
 #include "gui/Spc_Export_Window.h"
 struct Menu_Bar
 {
-  
-  //Menu_Bar();
+  Menu_Bar();
+
   bool is_first_run=true;
   void draw(SDL_Surface *screen);
   int receive_event(SDL_Event &ev);
-  
-  //bool is_first_run=false;
-  // QUIT - PAUSE - RESTART - PREV - NEXT - WRITE MASK - MM - DM - INSTR"
-
-           
 
   struct File_Context
   {
@@ -112,10 +107,10 @@ struct Menu_Bar
     {
       {"Window",        true,  NULL,  NULL},
       {"Original Size", true,  restore_window_size, NULL},
-      {"-------------", true, NULL, NULL},
-      {"Memory",        true,  BaseD::switch_to_memory,  NULL},
-      {"DSP",           true,  BaseD::switch_to_dsp,  NULL},
-      {"Instrument",    true,  BaseD::switch_to_instrument,  NULL},
+      /*{"-------------", true, NULL, NULL},
+      {"Memory",        true,  Main_Window::switch_to_memory,  NULL},
+      {"DSP",           true,  Main_Window::switch_to_dsp,  NULL},
+      {"Instrument",    true,  Main_Window::switch_to_instrument,  NULL},*/
       {"",              false, NULL,  NULL}
     };
   };

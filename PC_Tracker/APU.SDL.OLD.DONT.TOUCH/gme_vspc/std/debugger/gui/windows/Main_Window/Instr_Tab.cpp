@@ -1,4 +1,4 @@
-#include "Instrument_Window.h"
+#include "Instr_Tab.h"
 #include "sdlfont.h"
 #include "utility.h"
 #include "report.h"
@@ -7,29 +7,80 @@
 #include "platform.h"
 #include "Menu_Bar.h"
 
+void Instr_Tab::activate()
+{
+  // register callback
+}
+
+void Instr_Tab::deactivate()
+{
+  // deactivate callback
+}
+
+void Instr_Tab::midi_callback( double deltatime, std::vector< unsigned char > *message, void *userData )
+{
+  Midi *midi = (Midi*) userData;
+
+  // Send the note to the main app
+  if (m->IsNoteOn())
+  {
+    if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
+    {
+      SDL_Event event2;
+
+      event2.type = SDL_USEREVENT;
+      event2.user.code = UserEvents::play_pitch;
+      event2.user.data1 = (void*)m->GetNote();
+      event2.user.data2 = 0;
+      SDL_PushEvent(&event2);
+      last_note_on = m->GetNote();
+    }
+  }
+  else if (m->IsNoteOff())
+  {
+    if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
+    {
+      if (m->GetNote() == last_note_on)
+      {
+        SDL_Event event2;
+
+        event2.type = SDL_USEREVENT;
+        event2.user.code = UserEvents::keyoff;
+        event2.user.data1 = (void*)m->GetNote();
+        event2.user.data2 = 0;
+        SDL_PushEvent(&event2);
+      }
+    }
+  }
+  else if (m->IsProgramChange())
+  {
+    if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
+    {
+      BaseD::instr_window->set_voice(m->GetPGValue());
+    }  
+  }
+}
 
 
-
-
-Instrument_Window::Instrument_Window() : 
+Instr_Tab::Instr_Tab() : 
 octave("octave"),
 voice("voice")
 {
 
 }
 
-void Instrument_Window::pause_spc()
+void Instr_Tab::pause_spc()
 {
   start_stop.is_started = true;
   BaseD::Hack_Spc::pause_spc();
 }
-void Instrument_Window::restore_spc(bool resume/*=true*/)
+void Instr_Tab::restore_spc(bool resume/*=true*/)
 {
   start_stop.is_started = false;
   BaseD::Hack_Spc::restore_spc(resume);
 }
 
-void Instrument_Window::run()
+void Instr_Tab::run()
 {
   report::last_pc = (int)player->spc_emu()->pc(); 
 
@@ -74,7 +125,7 @@ void Instrument_Window::run()
   }
 }
 
-void Instrument_Window::one_time_draw()
+void Instr_Tab::one_time_draw()
 {
   int x = BaseD::menu_bar->tabs.rect.x, o_x=x;
   int y = BaseD::menu_bar->tabs.rect.y + BaseD::menu_bar->tabs.rect.h + (4*TILE_HEIGHT);
@@ -149,7 +200,7 @@ void Instrument_Window::one_time_draw()
     adsr_context_menus.sustain_release_context.menu.preload(sustain_release.x, y);
 }
 
-void Instrument_Window::draw()
+void Instr_Tab::draw()
 {
   /*if (!start_stop.is_started)
   {
@@ -172,23 +223,13 @@ void Instrument_Window::draw()
   //SDL_FillRect(screen, &attack_context.menu.created_at, Colors::black);
   
   adsr_context_menus.draw(screen);
-  draw_menu_bar();
   
   sdl_draw();
 }
 
-int Instrument_Window::receive_event(SDL_Event &ev)
+int Instr_Tab::receive_event(SDL_Event &ev)
 {
   int r;
-
-  if ((r=BaseD::menu_bar_events(ev)))
-  {
-    switch (r)
-    {
-      default:break;
-    }
-    return;
-  }
 
   if ((r=adsr_context_menus.receive_event(ev)))
   {
@@ -576,39 +617,39 @@ int Instrument_Window::receive_event(SDL_Event &ev)
   }
 }
 
-void Instrument_Window::set_voice(unsigned char v)
+void Instr_Tab::set_voice(unsigned char v)
 {
   voice.n = v % 8;
 }
 
-void Instrument_Window::inc_voice()
+void Instr_Tab::inc_voice()
 {
   if (voice.n == 7)
           voice.n = 0;
         else voice.n++;
 }
-void Instrument_Window::dec_voice()
+void Instr_Tab::dec_voice()
 {
   if (voice.n == 0)
           voice.n = 7;
         else voice.n--;
 }
 
-void Instrument_Window::inc_octave()
+void Instr_Tab::inc_octave()
 {
   if (octave.n == 6)
           octave.n = 0;
         else octave.n++;
 }
 
-void Instrument_Window::dec_octave()
+void Instr_Tab::dec_octave()
 {
   if (octave.n == 0)
           octave.n = 6;
         else octave.n--;
 }
 
-void Instrument_Window::play_pitch(int p, bool abs/*=false*/)
+void Instr_Tab::play_pitch(int p, bool abs/*=false*/)
 {
   if (!BaseD::Hack_Spc::is_started)
   {
@@ -629,7 +670,7 @@ void Instrument_Window::play_pitch(int p, bool abs/*=false*/)
 
 
 
-void Instrument_Window::keyoff_current_voice()
+void Instr_Tab::keyoff_current_voice()
 {
   player->spc_write_dsp(dsp_reg::koff, 1 << voice.n);
 }

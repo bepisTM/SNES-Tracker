@@ -38,4 +38,7 @@ void Render_Context::load_from_window(Window *win)
   sdlRenderer = win->sdlRenderer;
   sdlTexture = win->sdlTexture;
   screen = win->screen;
+
+  w = win->rect.w;
+  h = win->rect.h;
 }

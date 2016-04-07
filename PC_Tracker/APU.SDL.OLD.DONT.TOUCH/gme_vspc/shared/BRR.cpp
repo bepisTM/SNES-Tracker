@@ -119,15 +119,15 @@ void BRR::solo_sample()
   BaseD::voice_control.solo_bits(srcn_solo);
 }
 
-void BRR::play_sample(Instrument_Window *instr_window)
-{
-  //Instrument_Window *instr_window = 
-  fprintf(stderr, "one solo = %d", one_solo);
-  instr_window->switch_mode(BaseD::GrandMode::INSTRUMENT);
-  instr_window->voice.n = one_solo;
-  instr_window->pause_spc();
-  BaseD::voice_control.unmute_all();
-}
+// temporarily OUT-OF-ORDER
+// void BRR::play_sample(Instrument_Window *instr_window)
+// { 
+//   fprintf(stderr, "one solo = %d", one_solo);
+//   instr_window->switch_mode(BaseD::GrandMode::INSTRUMENT);
+//   instr_window->voice.n = one_solo;
+//   instr_window->pause_spc();
+//   BaseD::voice_control.unmute_all();
+// }
 
 BRR::BRR()
 {

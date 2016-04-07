@@ -39,6 +39,7 @@ struct BRR
   Uint8 lowest_srcn_index=0x0;  // indexes into report::src[]
   Uint8 lowest_loop_index=0x0;
   int check_brr(Uint16 *address);
-  void play_sample(Instrument_Window *instr_window);
+  // temporarily OUT-OF-ORDER
+  //void play_sample(Instrument_Window *instr_window);
   void solo_sample();
 };

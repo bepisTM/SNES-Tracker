@@ -1,4 +1,4 @@
-#include "Main_Window.h"
+#include "Mem_Tab.h"
 #include <getopt.h>
 #include "utility.h"
 #include "Screen.h"
@@ -13,14 +13,14 @@
 
 
 
-int Main_Window::Gain::change(void *dblnewgain)
+int Mem_Tab::Gain::change(void *dblnewgain)
 {
   BaseD::player->gain_has_changed = true;// = gain_db;
   //player->linear_gain = Audio::calculate_linear_gain_from_db(player->gain_db, Music_Player::min_gain_db);
   //BaseD::player->new_gain_db = *(double*)dblnewgain;// = pow ( 10.0, (0.05 * *(double*)dblnewgain) );
   return 0;
 }
-int Main_Window::Tempo::change(void *dblnewtempo)
+int Mem_Tab::Tempo::change(void *dblnewtempo)
 {
   double v = *(double*)dblnewtempo;
   //if (v >= 0.950 && v < 1.0) v = 1.0;
@@ -29,7 +29,7 @@ int Main_Window::Tempo::change(void *dblnewtempo)
   return 0;
 }
 
-void Main_Window::draw_memory_outline()
+void Mem_Tab::draw_memory_outline()
 {
   tmprect.x = MEMORY_VIEW_X-1;
   tmprect.y = MEMORY_VIEW_Y-1;
@@ -39,7 +39,7 @@ void Main_Window::draw_memory_outline()
   SDL_RenderDrawRect(sdlRenderer, &tmprect);
 }
 
-void Main_Window::draw()
+void Mem_Tab::draw()
 {
 
   if (!g_cfg.novideo)
@@ -85,7 +85,7 @@ void Main_Window::draw()
     i = 32 + SCREEN_Y_OFFSET;  
     if (player->has_no_song) 
     {
-      draw_menu_bar();
+      //draw_menu_bar();
       //SDL_UpdateRect(screen, 0, 0, 0, 0);
       SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
       SDL_RenderClear(sdlRenderer);
@@ -145,7 +145,7 @@ void Main_Window::draw()
       //draw_context.menu();
       main_memory_area.context.menu.draw(screen);
     }
-    draw_menu_bar();
+    //draw_menu_bar();
     
     
     //SDL_UpdateRect(screen, 0, 0, 0, 0);
@@ -170,7 +170,7 @@ void Main_Window::draw()
   else
   {
     draw_mouse_address();
-    draw_menu_bar();
+    //draw_menu_bar();
     
     
     //SDL_UpdateRect(screen, 0, 0, 0, 0);
@@ -187,47 +187,15 @@ void Main_Window::draw()
   is_first_run = false;
 }
 
-void Main_Window::check_quit(SDL_Event &ev)
-{
-  switch (ev.type)
-  {
-    case SDL_QUIT:
-    /*if (!g_cfg.nosound) {
-      SDL_PauseAudioDevice(Audio_Context::audio->devices.id, 1);
-    }*/
-    printf ("penis4\n");
-    quitting = true;
-    break;
 
-    case SDL_KEYDOWN:
-    if (ev.key.keysym.sym == SDLK_ESCAPE)
-    {
-      if (!locked() && mode != MODE_EDIT_APU_PORT)
-      {
-        fprintf(stderr, "penis88\n");
-        /*if (!g_cfg.nosound) {
-          SDL_PauseAudioDevice(Audio_Context::audio->devices.id, 1);
-        }*/
-        quitting = true;
-      }
-      
-    }
-  }
-}
 
-int Main_Window::receive_event(SDL_Event &ev)
+int Mem_Tab::receive_event(SDL_Event &ev)
 {
   /* menu bar */
   int r;
-  if ((r=BaseD::menu_bar_events(ev)))
-  {
-    switch (r)
-    {
-      default:break;
-    }
-    return;
-  }
-  check_quit(ev);
+  
+  //likely not needed??
+  //check_quit(ev);
 
   if (player->has_no_song) return;
 
@@ -1124,7 +1092,7 @@ int Main_Window::receive_event(SDL_Event &ev)
   }
 }
 
-void Main_Window::Scroll_Tag::compute(const char *str, Scroll_Tag *st, Uint32 extra_wait/*=1000*/)
+void Mem_Tab::Scroll_Tag::compute(const char *str, Scroll_Tag *st, Uint32 extra_wait/*=1000*/)
 {
   if (strlen(str) > Scroll_Tag::MAX_NO_SCROLL_LEN)
   {
@@ -1141,7 +1109,7 @@ void Main_Window::Scroll_Tag::compute(const char *str, Scroll_Tag *st, Uint32 ex
     st->need_to_scroll=false;
   }
 }
-void Main_Window::Scroll_Tag::scroll_draw()
+void Mem_Tab::Scroll_Tag::scroll_draw()
 {
   if (!need_to_scroll)
   { 
@@ -1175,7 +1143,7 @@ void Main_Window::Scroll_Tag::scroll_draw()
 
 
 
-void Main_Window::run()
+void Mem_Tab::run()
 {
   if ( player->has_no_song )
     return;
@@ -1211,7 +1179,7 @@ void Main_Window::run()
   BaseD::check_time();
 }
 
-void Main_Window::lock(char l/*=1*/, int x/*=0*/, int y/*=0*/, uint8_t rx/*=0*/, uint8_t ry/*=0*/)
+void Mem_Tab::lock(char l/*=1*/, int x/*=0*/, int y/*=0*/, uint8_t rx/*=0*/, uint8_t ry/*=0*/)
 {
   main_memory_area.lock(l,x,y,rx,ry);
   if (locked())
@@ -1224,133 +1192,23 @@ void Main_Window::lock(char l/*=1*/, int x/*=0*/, int y/*=0*/, uint8_t rx/*=0*/,
   }
   
 }
-void Main_Window::toggle_lock(int x/*=0*/, int y/*=0*/)
+void Mem_Tab::toggle_lock(int x/*=0*/, int y/*=0*/)
 {
   lock(!locked(), x, y);
 }
 
-void Main_Window::unlock()
+void Mem_Tab::unlock()
 {
   lock(0);
 }
 
 
 
-Main_Window::Main_Window(int &argc, char **argv) : 
+Mem_Tab::Mem_Tab() : 
 main_memory_area(&mouseover_hexdump_area, &dir),
 port_tool(&mouseover_hexdump_area.cursor)
 //echo_on("on", BaseD::toggle_echo, NULL)
 {
-  int res;
-  static struct option long_options[] = {
-    {"nosound", 0, 0, 0},
-    {"novideo", 0, 0, 1},
-    {"update_in_callback", 0, 0, 2},
-    {"echo", 0, 0, 3},
-    {"interpolation", 0, 0, 4},
-    {"savemask", 0, 0, 5},
-    {"default_time", 1, 0, 6},
-    {"ignore_tag_time", 0, 0, 7},
-    {"extra_time", 1, 0, 8},
-    {"yield", 0, 0, 9},
-    {"auto_write_mask", 0, 0, 10},
-    {"status_line", 0, 0, 11},
-    {"help", 0, 0, 'h'},
-    {"apply_mask_block", 0, 0, 12},
-    {"apply_mask_byte", 0, 0, 13},
-    {"filler", 1, 0, 14},
-    {0,0,0,0}
-  };
-
-  if (screen == NULL)
-  {
-    fprintf(stderr, "Debugger::MainWindows::screen is Null\n"); //screen, Render_Context::screen);
-    exit(1);
-  }
-
-  while ((res=getopt_long(argc, argv, "h",
-        long_options, NULL))!=-1)
-  {
-    switch(res)
-    {
-      case 0:
-        g_cfg.nosound = 1;
-        break;
-      case 1:
-        g_cfg.novideo = 2;
-        break;
-      case 2:
-        g_cfg.update_in_callback = 1;
-        break;
-      case 4:
-        //spc_config.is_interpolation = 1;
-        break;
-      case 3:
-        //spc_config.is_echo = 1;
-        break;
-      case 5:
-        g_cfg.autowritemask = 1;
-        break;
-      case 6:
-        g_cfg.defaultsongtime = atoi(optarg);
-        break;
-      case 7:
-        g_cfg.ignoretagtime = 1;
-        break;
-      case 8:
-        g_cfg.extratime = atoi(optarg);
-        break;
-      case 9:
-        g_cfg.nice = 1;
-        break;
-      case 10:
-        g_cfg.autowritemask = 1;
-        break;
-      case 11:
-        g_cfg.statusline = 1;
-        break;
-      case 12:
-        g_cfg.apply_block = 1;
-        break;
-      case 14:
-        g_cfg.filler = strtol(optarg, NULL, 0);
-        break;
-      case 'h':
-        printf("Usage: ./vspcplay [options] files...\n");
-        printf("\n");
-        printf("Valid options:\n");
-        printf(" -h, --help     Print help\n");
-        printf(" --nosound      Dont output sound\n");
-        printf(" --novideo      Dont open video window\n");
-        printf(" --update_in_callback   Update spc sound buffer inside\n");
-        printf("                        sdl audio callback\n");
-        printf(" --interpolation  Use sound interpolatoin\n");
-        printf(" --echo           Enable echo\n");
-        printf(" --auto_write_mask   Write mask file automatically when a\n");
-        printf("                     tune ends due to playtime from tag or\n");
-        printf("                     default play time.\n");
-        printf(" --default_time t    Set the default play time in seconds\n");
-        printf("                     for when there is not id666 tag. (default: %d\n", DEFAULT_SONGTIME);
-        printf(" --ignore_tag_time   Ignore the time from the id666 tag and\n");
-        printf("                     use default time\n");
-        printf(" --extra_time t      Set the number of extra seconds to play (relative to\n");
-        printf("                     the tag time or default time).\n");
-        printf(" --nice              Try to use less cpu for graphics\n");
-        printf(" --status_line       Enable a text mode status line\n");
-        printf("\n!!! Careful with those!, they can ruin your sets so backup first!!!\n");
-        printf(" --apply_mask_block  Apply the mask to the file (replace unreport::used blocks(256 bytes) with a pattern)\n");
-        printf(" --filler val        Set the pattern byte value. Use with the option above. Default 0\n");
-        printf("\n");
-        printf("The mask will be applied when the tune ends due to playtime from tag\n");
-        printf("or default playtime.\n");
-        exit(0);
-        break;
-    }
-  }
-
-  g_cfg.num_files = argc-optind;
-  g_cfg.playlist = &argv[optind];
-
   time_cur = time_last = SDL_GetTicks();
   report::memsurface.init();
 }
@@ -1361,7 +1219,7 @@ port_tool(&mouseover_hexdump_area.cursor)
 
 
 
-void Main_Window::exit_edit_mode()
+void Mem_Tab::exit_edit_mode()
 {
   mode = MODE_NAV;
   mouseover_hexdump_area.submode = 0;
@@ -1370,7 +1228,7 @@ void Main_Window::exit_edit_mode()
   unlock();
 }
 
-void Main_Window::draw_block_usage_bar()
+void Mem_Tab::draw_block_usage_bar()
 {
   static bool is_first_run=false;
   // draw the 256 bytes block usage bar
@@ -1416,18 +1274,18 @@ void Main_Window::draw_block_usage_bar()
     DEBUGLOG("new time slider");
     int slider_width = strlen(tmpbuf)*CHAR_WIDTH;
     //time_seek.slider = new Slider<double>(NULL,x, y+1, slider_width, 4, 8,8, 
-    //0, song_time, 0.0, 3, Main_Window::Gain::change, "db", true);
+    //0, song_time, 0.0, 3, Mem_Tab::Gain::change, "db", true);
     is_first_run=true;
   }
 }
 
-/*Main_Window::~Main_Window()
+/*Mem_Tab::~Mem_Tab()
 {
   if (gain_slider)
     delete gain_slider;
 }*/
 
-void Main_Window::draw_mouse_address()
+void Mem_Tab::draw_mouse_address()
 {
   // write the address under mouse cursor
   char addr_mouse_str[] = "Addr mouse: $%04X";
@@ -1455,7 +1313,7 @@ void Main_Window::draw_mouse_address()
     // here we will allocate slider at these coordinates
     DEBUGLOG("new slider");
     gain.slider = new Slider<double>(&player->new_gain_db,x, y+1, slider_width, 4, 6,6, 
-      player->min_gain_db, player->max_gain_db, 0.0, 3, Main_Window::Gain::change, "db", true);
+      player->min_gain_db, player->max_gain_db, 0.0, 3, Mem_Tab::Gain::change, "db", true);
     //gain.slider->set_adjuster_color ( Colors::nearblack);
   }
 
@@ -1473,13 +1331,13 @@ void Main_Window::draw_mouse_address()
     tempo.plus.action = BaseD::Clickable::inc_tempo;*/
     
     x += strlen(tmpbuf)*CHAR_WIDTH + 4;
-    tempo.slider = new Slider<double>(&player->tempo,x, y+1, slider_width, 4, 6,6, 0.02, 4.0, 1.0, 1, Main_Window::Tempo::change);
+    tempo.slider = new Slider<double>(&player->tempo,x, y+1, slider_width, 4, 6,6, 0.02, 4.0, 1.0, 1, Mem_Tab::Tempo::change);
     //tempo.slider->set_adjuster_color ( Colors::nearblack);
   }
   
 }
 
-void Main_Window::reload()
+void Mem_Tab::reload()
 {
   //scroll_tags.reset();
   fprintf(stderr, "DERP");
@@ -1487,7 +1345,7 @@ void Main_Window::reload()
   draw_track_tag();
 }
 
-void Main_Window::one_time_draw()
+void Mem_Tab::one_time_draw()
 {
   // draw one-time stuff
   //if (!g_cfg.novideo)
@@ -1524,7 +1382,7 @@ void Main_Window::one_time_draw()
 }
 
 
-void Main_Window::fade_arrays()
+void Mem_Tab::fade_arrays()
 {
   report::memsurface.fade_arrays();
 }
@@ -1535,7 +1393,7 @@ void Main_Window::fade_arrays()
 
 
 
-void Main_Window::do_scroller(int elaps_milli)
+void Mem_Tab::do_scroller(int elaps_milli)
 {
   int i;
   char c[2] = { 0, 0 }; 
@@ -1605,7 +1463,7 @@ void Main_Window::do_scroller(int elaps_milli)
 
 
 
-void Main_Window::draw_program_counter()
+void Mem_Tab::draw_program_counter()
 {
   // write the program counter
   if (player->has_no_song) report::last_pc = 0;
@@ -1614,7 +1472,7 @@ void Main_Window::draw_program_counter()
   sdlfont_drawString2(screen, PC_X, PC_Y, tmpbuf); // Colors::white);
 }
 
-void Main_Window::draw_voices_pitchs()
+void Mem_Tab::draw_voices_pitchs()
 {
   tmp = i+10; // y 
   sdlfont_drawString2(screen, MEMORY_VIEW_X+520, tmp, "Voices pitches:"); // Colors::white);
@@ -1682,7 +1540,7 @@ void Main_Window::draw_voices_pitchs()
   }
 }
 
-void Main_Window::draw_voices_volumes()
+void Mem_Tab::draw_voices_volumes()
 {
   tmp += 9*8;
 
@@ -1803,13 +1661,13 @@ void Main_Window::draw_voices_volumes()
   }
 }
 
-void Main_Window::draw_global_volumes()
+void Mem_Tab::draw_global_volumes()
 {
   draw_main_volume();
   draw_echo_volume();
 }
 
-void Main_Window::draw_main_volume()
+void Mem_Tab::draw_main_volume()
 {
   i=9;
   // 
@@ -1867,7 +1725,7 @@ void Main_Window::draw_main_volume()
   }
 }
 
-void Main_Window::draw_echo_volume()
+void Mem_Tab::draw_echo_volume()
 {
   i++;
   {
@@ -1946,7 +1804,7 @@ void Main_Window::draw_echo_volume()
 #undef L_FLAG
 #undef R_FLAG
 
-void Main_Window::draw_mouseover_hexdump()
+void Mem_Tab::draw_mouseover_hexdump()
 {
   i++;
 
@@ -2041,7 +1899,7 @@ void Main_Window::draw_mouseover_hexdump()
   }
 }
 
-void Main_Window::draw_porttool()
+void Mem_Tab::draw_porttool()
 {
   sdlfont_drawString(screen, PORTTOOL_X, PORTTOOL_Y+8, " APU:");
   sdlfont_drawString(screen, PORTTOOL_X, PORTTOOL_Y+16, "SNES:");
@@ -2057,7 +1915,7 @@ void Main_Window::draw_porttool()
   sdlfont_drawString(screen, PORTTOOL_X + (8*5), PORTTOOL_Y+16, tmpbuf);
 }
 
-void Main_Window::draw_time_and_echo_status(int *x/*=0*/, int *y/*=0*/)
+void Mem_Tab::draw_time_and_echo_status(int *x/*=0*/, int *y/*=0*/)
 {
   static bool is_first_run=true;
   static int xx=0, yy=0;
@@ -2098,34 +1956,11 @@ void Main_Window::draw_time_and_echo_status(int *x/*=0*/, int *y/*=0*/)
 
 
 
-// update window title with track info
-void Main_Window::update_window_title()
-{
-
-  long seconds = player->track_info().length / 1000;
-  const char* game = player->track_info().game;
-  if ( !*game )
-  {
-    // extract filename
-    game = strrchr( path, '\\' ); // DOS
-    if ( !game )
-      game = strrchr( path, '/' ); // UNIX
-    if ( !game )
-      game = path;
-    else
-      game++; // skip path separator
-  }
-  
-  char title [512];
-  sprintf( title, "%s: %d/%d %s (%ld:%02ld)",
-      game, g_cur_entry+1, g_cfg.num_files, player->track_info().song,
-      seconds / 60, seconds % 60 );
-  SDL_SetWindowTitle(sdlWindow, title);
-}
 
 
 
-void Main_Window::scroll_track_tags()
+
+void Mem_Tab::scroll_track_tags()
 {
   static Uint32 recorded_sec_elapsed=0;
   Uint32 cur_sec_elapsed = time_cur / 195;
@@ -2137,7 +1972,7 @@ void Main_Window::scroll_track_tags()
 
   scroll_tags.scroll_draw();
 }
-void Main_Window::draw_track_tag()
+void Mem_Tab::draw_track_tag()
 {
   static SDL_Rect r;
 
@@ -2226,7 +2061,7 @@ void Main_Window::draw_track_tag()
   }
 }
 
-void Main_Window::maybe_write_to_mem(bool force/*=false*/)
+void Mem_Tab::maybe_write_to_mem(bool force/*=false*/)
 {
   Uint16 addr= mouseover_hexdump_area.addr_being_edited;
   if ( IS_SPECIAL_ADDRESSES(addr) )

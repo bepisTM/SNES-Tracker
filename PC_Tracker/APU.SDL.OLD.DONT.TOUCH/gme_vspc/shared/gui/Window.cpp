@@ -2,14 +2,21 @@
 
 Window::Window(int width, int height, const char *title)
 {
-  rect.w = width;
-  rect.h = height;
+  rc.rect.w = width;
+  rc.rect.h = height;
   this->title = title;
   init();
 }
 
 void Window::init()
 {
+  SDL_Window &sdlWindow = rc.sdlWindow;
+  SDL_Renderer &sdlRenderer = rc.sdlRenderer;
+  SDL_Texture &sdlTexture = rc.sdlTexture;
+  SDL_Surface &screen = rc.screen;
+  Uint32 &windowID = rc.windowID;
+  SDL_Rect &rect = rc.rect;
+
   this->destroy();
   SDL_CreateWindowAndRenderer(rect.w, rect.h, SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIDDEN /*| SDL_WINDOW_BORDERLESS*/, &sdlWindow, &sdlRenderer);
   if (sdlWindow == NULL || sdlRenderer == NULL)
@@ -48,43 +55,18 @@ void Window::init()
     return;
   }
 
-  // needs to be more permanent eh!
-  //char tmpbuf[100];
-  //sprintf(tmpbuf, PROG_NAME_VERSION_STRING, APP_VERSION);
-  
-  //clear_screen();
-  //SDL_RaiseWindow(sdlWindow);
-  //clear_screen();
-  //SDL_HideWindow(sdlWindow);
+  // consider raising window here if APPLE
   SDL_SetWindowTitle(sdlWindow, title.c_str());
-  //SDL_Delay(5000);
-  //SDL_ShowWindow(sdlWindow);
+}
+
+void Window::set_title(const char *str)
+{
+  SDL_SetWindowTitle(rc.sdlWindow, str);
 }
 
 void Window::destroy()
 {
-  if (screen)
-  {
-    SDL_FreeSurface(screen);
-    screen = NULL;
-  }
-  if (sdlTexture)
-  {
-    SDL_DestroyTexture(sdlTexture);
-    sdlTexture = NULL;
-  }
-    
-  if (sdlRenderer)
-  {
-    SDL_DestroyRenderer(sdlRenderer);
-    sdlRenderer = NULL;
-  }
-    
-  if(sdlWindow)
-  {
-    SDL_DestroyWindow(sdlWindow);
-    sdlWindow = NULL;
-  }  
+  rc.destroy();
 }
 
 Window::~Window()
@@ -95,26 +77,19 @@ Window::~Window()
 
 void Window::clear_screen()
 {
-  SDL_FillRect(screen, NULL, 0);
-  SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
-  SDL_RenderClear(sdlRenderer);
-  SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-  SDL_RenderPresent(sdlRenderer);
+  rc.clear_screen();
 }
 
 void Window::update_screen()
 {
-  SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
-  SDL_RenderClear(sdlRenderer);
-  SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-  SDL_RenderPresent(sdlRenderer);
+  rc.update_screen();
 }
 
 void Window::show()
 {
   SDL_Log("Window::show()");
-  SDL_ShowWindow(sdlWindow);
-  SDL_RaiseWindow(sdlWindow);
+  SDL_ShowWindow(rc.sdlWindow);
+  SDL_RaiseWindow(rc.sdlWindow);
   oktoshow = true;
   //init();
 }
@@ -122,14 +97,14 @@ void Window::show()
 void Window::raise()
 {
   SDL_Log("Window::raise()");
-  SDL_RaiseWindow(sdlWindow);
+  SDL_RaiseWindow(rc.sdlWindow);
 }
 
 void Window::hide()
 {
   //this->destroy();
   //SDL_SetWindowGrab(sdlWindow, SDL_FALSE);
-  SDL_HideWindow(sdlWindow);
+  SDL_HideWindow(rc.sdlWindow);
   oktoshow = false;
   //SDL_SetWindowPosition(sdlWindow, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED);
 }
