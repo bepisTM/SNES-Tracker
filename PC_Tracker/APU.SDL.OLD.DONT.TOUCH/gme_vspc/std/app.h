@@ -9,7 +9,7 @@
 #include "gui/Cursors.h"
 //#include "Tracker/Tracker.h"
 
-class App : public Render_Context, public Player_Context, public Midi_Context, public App_Settings_Context
+class App
 {
 public:
   App(int &argc, char **argv, int samplerate=44100);
@@ -18,8 +18,6 @@ public:
   int init();
   int init_sdl(SDL_Window **, int,int);
   
-  //int parse_args(int argc, char **argv);
-  //Tracker tracker;
   App_Settings *app_settings;
   Debugger *debugger;
   Music_Player *player;
@@ -27,8 +25,6 @@ public:
   File_System *file_system;
   Midi *midi;
   Audio *audio;
-
-  //Window main_window;
 
 private:
   int init_sdl();

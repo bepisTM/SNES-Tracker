@@ -5,28 +5,20 @@
 
 #include "Render_Context.h"
 
-int init_sdl(SDL_Window **sdlWindow, SDL_Renderer **sdlRenderer, SDL_Texture **sdlTexture,
-  SDL_Surface **screen, int width, int height);
+int init_sdl();
 
 int main(int argc, char **argv)
 {
-  init_sdl(&Render_Context::sdlWindow, &Render_Context::sdlRenderer, 
-    &Render_Context::sdlTexture, &Render_Context::screen, SCREEN_WIDTH, SCREEN_HEIGHT);
+  init_sdl();
 
-  Render_Context::windowID = SDL_GetWindowID(Render_Context::sdlWindow);
-  //SDL_SetWindowSize(Render_Context::sdlWindow, 1024+100, 768+100);
-
-  //fprintf(stderr, "screen = %d\n", Render_Context::screen);
   App app(argc, argv, 32000);
   app.run();
 }
 
 
-int init_sdl(SDL_Window **sdlWindow, SDL_Renderer **sdlRenderer, SDL_Texture **sdlTexture, 
-  SDL_Surface **screen, int width, int height)
+int init_sdl()
 {
-  Uint32 flags=0;
-  flags |= SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER; 
+  Uint32 flags = SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER; 
 
   if (SDL_Init(flags) != 0) 
   {
@@ -36,6 +28,7 @@ int init_sdl(SDL_Window **sdlWindow, SDL_Renderer **sdlRenderer, SDL_Texture **s
            );
     return -1;
   }
+
   atexit(SDL_Quit);
   
   Colors::precompute(*screen);

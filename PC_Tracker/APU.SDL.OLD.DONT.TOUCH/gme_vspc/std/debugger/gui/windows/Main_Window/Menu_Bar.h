@@ -149,49 +149,4 @@ struct Menu_Bar
     Track_Context         track_context;
     Window_Context        window_context;
   } context_menus;
-
-  struct Tabs
-  {
-    SDL_Rect rect;
-    void preload(int x, int y);
-    Tabs() : mem(3,3, "Mem", BaseD::switch_to_memory, NULL, true),
-      dsp(3,3, "DSP", BaseD::switch_to_dsp, NULL),
-      instr(3,3, "INSTR", BaseD::switch_to_instrument, NULL)
-    {
-
-    }
-    bool check_mouse_and_execute(int x, int y)
-    {
-      if (mem.check_mouse_and_execute(x,y)) 
-      {
-        mem.active = true;
-        dsp.active = false;
-        instr.active = false;
-        return true;
-      }
-      if (dsp.check_mouse_and_execute(x,y)) 
-      {
-        mem.active = false;
-        dsp.active = true;
-        instr.active = false;
-        return true;
-      }
-      if (instr.check_mouse_and_execute(x,y))
-      {
-        mem.active = false;
-        dsp.active = false;
-        instr.active = true;
-        return true;
-      }
-      return false;
-    }
-    Tab mem, dsp, instr;
-    void draw ();
-    static int memory(void *data);
-    static int DSP(void *data);
-    static int Instrument(void *data);
-
-    int logged_grand_mode=BaseD::GrandMode::MAIN;
-  } tabs;
-
 };

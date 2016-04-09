@@ -1,117 +1,14 @@
 #include "Main_Window.h"
 
-Main_Window::Main_Window(int &argc, char **argv) :
-Window(SCREEN_WIDTH, SCREEN_HEIGHT, APP_NAME_VERSION)
+Main_Window::Main_Window(int width, int height, const char *title) :
+Window(width, height, title)
 {
-  int res;
-  static struct option long_options[] = {
-    {"nosound", 0, 0, 0},
-    {"novideo", 0, 0, 1},
-    {"update_in_callback", 0, 0, 2},
-    {"echo", 0, 0, 3},
-    {"interpolation", 0, 0, 4},
-    {"savemask", 0, 0, 5},
-    {"default_time", 1, 0, 6},
-    {"ignore_tag_time", 0, 0, 7},
-    {"extra_time", 1, 0, 8},
-    {"yield", 0, 0, 9},
-    {"auto_write_mask", 0, 0, 10},
-    {"status_line", 0, 0, 11},
-    {"help", 0, 0, 'h'},
-    {"apply_mask_block", 0, 0, 12},
-    {"apply_mask_byte", 0, 0, 13},
-    {"filler", 1, 0, 14},
-    {0,0,0,0}
-  };
-
-  while ((res=getopt_long(argc, argv, "h",
-        long_options, NULL))!=-1)
-  {
-    switch(res)
-    {
-      case 0:
-        g_cfg.nosound = 1;
-        break;
-      case 1:
-        g_cfg.novideo = 2;
-        break;
-      case 2:
-        g_cfg.update_in_callback = 1;
-        break;
-      case 4:
-        //spc_config.is_interpolation = 1;
-        break;
-      case 3:
-        //spc_config.is_echo = 1;
-        break;
-      case 5:
-        g_cfg.autowritemask = 1;
-        break;
-      case 6:
-        g_cfg.defaultsongtime = atoi(optarg);
-        break;
-      case 7:
-        g_cfg.ignoretagtime = 1;
-        break;
-      case 8:
-        g_cfg.extratime = atoi(optarg);
-        break;
-      case 9:
-        g_cfg.nice = 1;
-        break;
-      case 10:
-        g_cfg.autowritemask = 1;
-        break;
-      case 11:
-        g_cfg.statusline = 1;
-        break;
-      case 12:
-        g_cfg.apply_block = 1;
-        break;
-      case 14:
-        g_cfg.filler = strtol(optarg, NULL, 0);
-        break;
-      case 'h':
-        printf("Usage: ./vspcplay [options] files...\n");
-        printf("\n");
-        printf("Valid options:\n");
-        printf(" -h, --help     Print help\n");
-        printf(" --nosound      Dont output sound\n");
-        printf(" --novideo      Dont open video window\n");
-        printf(" --update_in_callback   Update spc sound buffer inside\n");
-        printf("                        sdl audio callback\n");
-        printf(" --interpolation  Use sound interpolatoin\n");
-        printf(" --echo           Enable echo\n");
-        printf(" --auto_write_mask   Write mask file automatically when a\n");
-        printf("                     tune ends due to playtime from tag or\n");
-        printf("                     default play time.\n");
-        printf(" --default_time t    Set the default play time in seconds\n");
-        printf("                     for when there is not id666 tag. (default: %d\n", DEFAULT_SONGTIME);
-        printf(" --ignore_tag_time   Ignore the time from the id666 tag and\n");
-        printf("                     use default time\n");
-        printf(" --extra_time t      Set the number of extra seconds to play (relative to\n");
-        printf("                     the tag time or default time).\n");
-        printf(" --nice              Try to use less cpu for graphics\n");
-        printf(" --status_line       Enable a text mode status line\n");
-        printf("\n!!! Careful with those!, they can ruin your sets so backup first!!!\n");
-        printf(" --apply_mask_block  Apply the mask to the file (replace unreport::used blocks(256 bytes) with a pattern)\n");
-        printf(" --filler val        Set the pattern byte value. Use with the option above. Default 0\n");
-        printf("\n");
-        printf("The mask will be applied when the tune ends due to playtime from tag\n");
-        printf("or default playtime.\n");
-        exit(0);
-        break;
-    }
-  }
-
-  g_cfg.num_files = argc-optind;
-  g_cfg.playlist = &argv[optind];
+  cur_tab_exp = (Experience *)&mem_tab;
 }
 
 // update window title with track info
 void Main_Window::update_window_title()
 {
-
   long seconds = player->track_info().length / 1000;
   const char* game = player->track_info().game;
   if ( !*game )
@@ -133,7 +30,98 @@ void Main_Window::update_window_title()
   SDL_SetWindowTitle(sdlWindow, title);
 }
 
-void Mem_Tab::check_quit(SDL_Event &ev)
+void Main_Window::Tabs::preload(int x, int y)
+{
+  // init Tabs
+  mem.rect.x = x;
+  mem.rect.y = y; // + h + CHAR_HEIGHT*2;
+  //
+  dsp.rect.x = mem.rect.x + mem.horiz_pixel_length() + CHAR_WIDTH;
+  dsp.rect.y = mem.rect.y;
+  //
+  instr.rect.x = dsp.rect.x + dsp.horiz_pixel_length() + CHAR_WIDTH;
+  instr.rect.y = mem.rect.y;
+
+  rect = {mem.rect.x, mem.rect.y, instr.rect.x + instr.rect.w, CHAR_HEIGHT};
+}
+
+void Main_Window::Tabs::draw()
+{
+  // tmpfix
+  // if (BaseD::grand_mode != logged_grand_mode)
+  // {
+  //   logged_grand_mode = BaseD::grand_mode;
+
+  //   if (BaseD::grand_mode == BaseD::GrandMode::MAIN)
+  //   {
+  //     mem.active = true;
+  //     dsp.active = false;
+  //     instr.active = false;
+  //   }
+  //   else if (BaseD::grand_mode == BaseD::GrandMode::DSP_MAP)
+  //   {
+  //     mem.active = false;
+  //     dsp.active = true;
+  //     instr.active = false;
+  //   }
+  //   else if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
+  //   {
+  //     mem.active = false;
+  //     dsp.active = false;
+  //     instr.active = true;
+  //   }    
+  // }
+  mem.draw();
+  dsp.draw();
+  instr.draw();
+}
+
+void Main_Window::one_time_draw()
+{
+  tabs.preload(menu_bar.context_menus.x, 
+    menu_bar.context_menus.y + menu_bar.context_menus.h + CHAR_HEIGHT*2);
+  cur_tab_exp->one_time_draw();
+}
+
+void Main_Window::run()
+{
+  cur_tab_exp->run();
+}
+
+void Main_Window::draw()
+{
+  tabs.draw();
+  cur_tab_exp->draw();
+  menu_bar.draw();
+}
+
+int Main_Window::receive_event(SDL_Event &ev)
+{
+  // Do global stuff here
+  if (ev.type == SDL_MOUSEBUTTONDOWN)
+  {
+    if (!BaseD::player->has_no_song)
+    {
+      bool r = tabs.check_mouse_and_execute(ev.button.x, ev.button.y);
+      if (r) return r;
+    }
+  }
+
+  // then :
+  cur_tab_exp->receive_event(ev);
+}
+
+// dunno if I'll need this
+void Main_Window::activate()
+{
+
+}
+void Main_Window::deactivate()
+{
+
+}
+
+void Main_Window::check_quit(SDL_Event &ev)
 {
   switch (ev.type)
   {

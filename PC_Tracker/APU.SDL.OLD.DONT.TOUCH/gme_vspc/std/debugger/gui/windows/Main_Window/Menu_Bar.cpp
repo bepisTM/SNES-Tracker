@@ -9,39 +9,6 @@
 
 #include "gme/Wave_Writer.h"
 
-void Menu_Bar::Tabs::draw()
-{
-  // tmpfix
-  if (BaseD::grand_mode != logged_grand_mode)
-  {
-    logged_grand_mode = BaseD::grand_mode;
-
-    if (BaseD::grand_mode == BaseD::GrandMode::MAIN)
-    {
-      mem.active = true;
-      dsp.active = false;
-      instr.active = false;
-    }
-    else if (BaseD::grand_mode == BaseD::GrandMode::DSP_MAP)
-    {
-      mem.active = false;
-      dsp.active = true;
-      instr.active = false;
-    }
-    else if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
-    {
-      mem.active = false;
-      dsp.active = false;
-      instr.active = true;
-    }    
-  }
-    
-
-  mem.draw();
-  dsp.draw();
-  instr.draw();
-}
-
 int Menu_Bar::Edit_Context::open_options_window(void *data)
 {
   DEBUGLOG("open_options_window()\n");
@@ -71,16 +38,11 @@ void Menu_Bar::draw(SDL_Surface *screen)
   if (is_first_run)
   {
     context_menus.preload(10, 10);
-    tabs.preload(context_menus.x, context_menus.y + context_menus.h + CHAR_HEIGHT*2);
     is_first_run = false;
     fprintf(stderr, "menubar DERP");
   }
-  //sprintf(tmpbuf, " QUIT - PAUSE - RESTART - PREV - NEXT - WRITE MASK - MM - DM - INSTR");
-  //sdlfont_drawString(screen, 0, screen->h-9, tmpbuf, Colors::yellow);
-  
-  tabs.draw();
+
   context_menus.draw(screen);
-  
 }
 
 
@@ -277,15 +239,6 @@ bool Menu_Bar::Context_Menus::check_left_click_activate(int &x, int &y, const Ui
 int Menu_Bar::receive_event(SDL_Event &ev)
 { 
   int r;
-  
-  if (ev.type == SDL_MOUSEBUTTONDOWN)
-  {
-    if (!BaseD::player->has_no_song)
-    {
-      bool r = tabs.check_mouse_and_execute(ev.button.x, ev.button.y);
-      if (r) return r;
-    }
-  }
 
   r = context_menus.receive_event(ev);
   if (r) return r;
@@ -361,17 +314,3 @@ void Menu_Bar::Context_Menus::draw(SDL_Surface *screen)
   }
 }
 
-void Menu_Bar::Tabs::preload(int x, int y)
-{
-  // init Tabs
-  mem.rect.x = x;
-  mem.rect.y = y; // + h + CHAR_HEIGHT*2;
-  //
-  dsp.rect.x = mem.rect.x + mem.horiz_pixel_length() + CHAR_WIDTH;
-  dsp.rect.y = mem.rect.y;
-  //
-  instr.rect.x = dsp.rect.x + dsp.horiz_pixel_length() + CHAR_WIDTH;
-  instr.rect.y = mem.rect.y;
-
-  rect = {mem.rect.x, mem.rect.y, instr.rect.x + instr.rect.w, CHAR_HEIGHT};
-}

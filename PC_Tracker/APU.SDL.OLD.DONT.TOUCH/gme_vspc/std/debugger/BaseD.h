@@ -52,6 +52,7 @@ struct BaseD : public Render_Context, public Player_Context
     static int dec_tempo(void *nada);
   };
 
+  static void init_cmdline(int &argc, char **argv);
   //static char **rsn_spc_paths;
   static void check_paths_and_reload(char **paths=g_cfg.playlist, 
     int numpaths=g_cfg.num_files, bool is_drop_event=false);

@@ -8,6 +8,10 @@
 Debugger::Debugger(int &argc, char **argv) :
 main_window(argc,argv)
 {
+  BaseD::init_cmdline(argc, argv);
+  // support the Render_Context for now
+  Render_Context::load_from_window(main_window);
+
   // I am naturally against "de-capsulating these window objs"
   // BaseD::main_window = &main_window;
   // BaseD::options_window = &options_window;
@@ -50,7 +54,7 @@ void Debugger::run()
 {
   //SDL_CaptureMouse(SDL_TRUE);
   // gotta call this once to initialize important stuffz
-  main_window.check_paths_and_reload();
+  BaseD::check_paths_and_reload();
   main_window.one_time_draw();
 
   exp->draw();

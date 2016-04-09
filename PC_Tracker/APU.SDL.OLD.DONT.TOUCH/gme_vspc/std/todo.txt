@@ -1,5 +1,10 @@
 Refactor Todo
 -------------
+006 Make Tab_Collection class
+005 automatic tab "active" thing..
+004 Careful, alot of mem_tab references are still referring to main_window
+003 Keyboard Shortcuts Modular per GUI interface
+  \-> This could be modular per Experience
 002 Remove SDL implementation from BRR class
 001 Remove all references to GrandMode
 --- Removing Midi class reference
