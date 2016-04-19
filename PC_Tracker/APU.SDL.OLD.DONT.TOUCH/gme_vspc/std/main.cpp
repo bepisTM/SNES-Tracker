@@ -30,10 +30,6 @@ int init_sdl()
   }
 
   atexit(SDL_Quit);
-  
-  Colors::precompute(*screen);
-
-  dblclick::init();
 
   return 0; 
 }

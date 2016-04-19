@@ -34,7 +34,6 @@ class Sdl_Spc_Report : public Spc_Report
 
 void report_cursor(int addr);
 
-
 // Memsurface and the other entities are coupled together OK!! 
 // ie. memsurface.clear() will also clear BRR_Headers SRCN LOOP_used arrays..
 // it doesn't make sense to call one but not the other!! 

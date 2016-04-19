@@ -9,4 +9,5 @@
             fprintf(stderr, "STUBBED: %s in %s, line %d.\n", txt, __FILE__, __LINE__); \
         } \
     } while (0)
+    #define STUB STUBBED
 #endif

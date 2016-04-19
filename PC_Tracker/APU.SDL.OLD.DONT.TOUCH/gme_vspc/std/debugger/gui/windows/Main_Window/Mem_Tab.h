@@ -81,7 +81,6 @@ public Experience
     MODE_EDIT_MOUSE_HEXDUMP,
     MODE_EDIT_APU_PORT,
     MODE_EDIT_TIME
-    //MODE_QUIT  
   };
 
   void run();
@@ -115,8 +114,8 @@ public Experience
 
   // don't migrate
   void exit_edit_mode();
-  void inc_ram(int addr, int i);
-  void dec_ram(int addr, int i);
+  //void inc_ram(int addr, int i);
+  //void dec_ram(int addr, int i);
   
   // MAYBE migrate
   void reload();

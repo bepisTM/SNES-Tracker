@@ -50,23 +50,23 @@ void Spc_Export_Window::one_time_draw()
 {
   int x=10, y=10;
   sprintf(BaseD::tmpbuf, "Game....: %s", BaseD::tag.game);
-  sdlfont_drawString(this->screen, x, y, BaseD::tmpbuf); 
+  sdlfont_drawString(rc.screen, x, y, BaseD::tmpbuf); 
   y+=CHAR_HEIGHT;
   sprintf(BaseD::tmpbuf, "Title...: %s", BaseD::tag.song);
-  sdlfont_drawString(this->screen, x, y, BaseD::tmpbuf); 
+  sdlfont_drawString(rc.screen, x, y, BaseD::tmpbuf); 
   y+=CHAR_HEIGHT;
   sprintf(BaseD::tmpbuf, "Length..: %ld", BaseD::tag.length);
-  sdlfont_drawString(this->screen, x, y, BaseD::tmpbuf);
+  sdlfont_drawString(rc.screen, x, y, BaseD::tmpbuf);
   y+=CHAR_HEIGHT;
   sprintf(BaseD::tmpbuf, "Composer: %s", BaseD::tag.author);
-  sdlfont_drawString(this->screen, x, y, BaseD::tmpbuf); 
+  sdlfont_drawString(rc.screen, x, y, BaseD::tmpbuf); 
   y+=CHAR_HEIGHT*2;
 
   sprintf(BaseD::tmpbuf, "Dumper..: %s", BaseD::tag.dumper);
-  sdlfont_drawString(this->screen, x, y, BaseD::tmpbuf); 
+  sdlfont_drawString(rc.screen, x, y, BaseD::tmpbuf); 
   y+=CHAR_HEIGHT;
   sprintf(BaseD::tmpbuf, "Comment.: %s", BaseD::tag.comment);
-  sdlfont_drawString(this->screen, x, y, BaseD::tmpbuf); 
+  sdlfont_drawString(rc.screen, x, y, BaseD::tmpbuf); 
   y+=CHAR_HEIGHT*5;
 
   export_button.setup(WIDTH,y,true);
@@ -142,7 +142,7 @@ void Spc_Export_Window::run()
 
 void Spc_Export_Window::draw()
 {
-  export_button.draw(true, false, false, screen);
+  export_button.draw(true, false, false, rc.screen);
   update_screen();
 }
 

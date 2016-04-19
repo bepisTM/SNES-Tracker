@@ -1,6 +1,5 @@
 #include "Midi.h"
 #include "BaseD.h"
-#include "Instrument_Window.h"
 #include "Notes.h"
 #include "Midi_Context.h"
 

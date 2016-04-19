@@ -10,11 +10,13 @@
 void Instr_Tab::activate()
 {
   // register callback
+  STUB("Instr_Tab::activate");
 }
 
 void Instr_Tab::deactivate()
 {
   // deactivate callback
+  STUB("Instr_Tab::deactivate");
 }
 
 void Instr_Tab::midi_callback( double deltatime, std::vector< unsigned char > *message, void *userData )
@@ -24,8 +26,6 @@ void Instr_Tab::midi_callback( double deltatime, std::vector< unsigned char > *m
   // Send the note to the main app
   if (m->IsNoteOn())
   {
-    if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
-    {
       SDL_Event event2;
 
       event2.type = SDL_USEREVENT;
@@ -34,30 +34,23 @@ void Instr_Tab::midi_callback( double deltatime, std::vector< unsigned char > *m
       event2.user.data2 = 0;
       SDL_PushEvent(&event2);
       last_note_on = m->GetNote();
-    }
   }
   else if (m->IsNoteOff())
   {
-    if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
+    if (m->GetNote() == last_note_on)
     {
-      if (m->GetNote() == last_note_on)
-      {
-        SDL_Event event2;
+      SDL_Event event2;
 
-        event2.type = SDL_USEREVENT;
-        event2.user.code = UserEvents::keyoff;
-        event2.user.data1 = (void*)m->GetNote();
-        event2.user.data2 = 0;
-        SDL_PushEvent(&event2);
-      }
+      event2.type = SDL_USEREVENT;
+      event2.user.code = UserEvents::keyoff;
+      event2.user.data1 = (void*)m->GetNote();
+      event2.user.data2 = 0;
+      SDL_PushEvent(&event2);
     }
   }
   else if (m->IsProgramChange())
   {
-    if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
-    {
-      BaseD::instr_window->set_voice(m->GetPGValue());
-    }  
+    set_voice(m->GetPGValue());
   }
 }
 
@@ -563,51 +556,6 @@ int Instr_Tab::receive_event(SDL_Event &ev)
       else if (Utility::coord_is_in_rect(ev.button.x, ev.button.y, &octave.down_arrow.rect))
       {
         dec_octave();
-      }
-
-      if (
-      ((ev.button.y >screen->h-12) && (ev.button.y<screen->h)))
-      {
-        int x = ev.button.x / CHAR_WIDTH;
-        if (x>=1 && x<=4) { printf ("penis5\n"); quitting=true; } // exit
-        if (x>=CHAR_WIDTH && x<=12) { 
-          toggle_pause();
-        } // pause
-
-        if (x>=16 && x<=22) {  // restart
-          restart_current_track();
-        }
-
-        if (x>=26 && x<=29) {  // prev
-          SDL_PauseAudioDevice(Audio_Context::audio->devices.id, 1);
-          prev_track();
-        }
-
-        if (x>=33 && x<=36) { // next
-          next_track();
-        }
-
-        if (x>=41 && x<=50) { // write mask
-          //write_mask(packed_mask);
-        }
-
-        if (x>=53 && x<=54) { // Main
-          //write_mask(packed_mask);
-          //mode = MODE_DSP_MAP;
-          restore_spc(false);
-          switch_mode(GrandMode::MAIN);
-        }
-        if (x>=58 && x<=59) { // DSP MAP
-          //write_mask(packed_mask);
-          //mode = MODE_DSP_MAP;
-          restore_spc(false);
-          switch_mode(GrandMode::DSP_MAP);
-        }
-        if (x>=63 && x<=67) { // Instr
-          //write_mask(packed_mask);
-          //mode = MODE_DSP_MAP;
-          //switch_mode(GrandMode::INSTRUMENT);
-        }
       }
     }
     break;

@@ -35,10 +35,10 @@ void Render_Context::load_from_window(Window *win)
 {
   sdlWindow = win->sdlWindow;
   windowID = win->windowID;
-  sdlRenderer = win->sdlRenderer;
-  sdlTexture = win->sdlTexture;
-  screen = win->screen;
+  sdlRenderer = win->rc.sdlRenderer;
+  sdlTexture = win->rc.sdlTexture;
+  screen = win->rc.screen;
 
-  w = win->rect.w;
-  h = win->rect.h;
+  w = win->rc.rect.w;
+  h = win->rc.rect.h;
 }

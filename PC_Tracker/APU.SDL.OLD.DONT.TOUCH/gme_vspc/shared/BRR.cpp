@@ -123,7 +123,7 @@ void BRR::solo_sample()
 // void BRR::play_sample(Instrument_Window *instr_window)
 // { 
 //   fprintf(stderr, "one solo = %d", one_solo);
-//   instr_window->switch_mode(BaseD::GrandMode::INSTRUMENT);
+//   instr_window->switch_mode(INSTRUMENT);
 //   instr_window->voice.n = one_solo;
 //   instr_window->pause_spc();
 //   BaseD::voice_control.unmute_all();

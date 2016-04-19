@@ -809,11 +809,6 @@ int Dsp_Tab::receive_event(SDL_Event &ev)
         case SDLK_SPACE: // toggle pause
           player->toggle_pause();
         break;
-        case SDLK_SLASH:
-          if (mode == MODE_EDIT_ADDR)
-            exit_edit_mode();
-          BaseD::switch_mode(GrandMode::MAIN);
-          break;
         default:break;
       }
       if (ev.key.keysym.mod & (KMOD_SHIFT) && mode != MODE_EDIT_ADDR)
@@ -1089,14 +1084,6 @@ int Dsp_Tab::receive_event(SDL_Event &ev)
           player->spc_write_dsp(dsp_reg::koff,val);
           break;
         }
-        case SDLK_d:
-          if (mode == MODE_NAV)
-            BaseD::switch_mode(GrandMode::MAIN);
-          break;
-
-        
-        
-          break;
         default:
           break;
       }

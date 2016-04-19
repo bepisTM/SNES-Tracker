@@ -6,7 +6,6 @@
 #include "memory/Mouse_Hexdump_Area.h"
 #include "gui/Context_Menu.h"
 #include "gme/Spc_Dsp_Register_Map_Interface.h"
-#include "Instrument_Window.h"
 #include "BRR.h"
 // expects pre-calculated main_memory_area.brr
 int write_brri_to_file(void *data);
@@ -20,20 +19,15 @@ int solo_sample(void *data);
 struct Main_Memory_Area : Memory
 {
 public:
-  //friend class Mouse_Hexdump_Area;
   Main_Memory_Area(Mouse_Hexdump_Area *mouse_hexdump_area, uint16_t *dir);
 
   void set_addr(int i);
   void set_addr_from_cursor(int x, int y);
-  //void add_addr(int i);
 
   void lock(char l=1, int x=0, int y=0, uint8_t rx=0, uint8_t ry=0);
   void toggle_lock(int x=0, int y=0);
   
   void unlock();
-  //void update_editing_address();
-  
-  //void processContextEvents(SDL_Event &ev);
   
   Mem_Cursor memcursor;
   Mouse_Hexdump_Area *mouse_hexdump_area;

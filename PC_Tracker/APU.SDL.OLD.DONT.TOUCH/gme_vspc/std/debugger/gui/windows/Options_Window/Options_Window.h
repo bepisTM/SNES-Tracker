@@ -3,7 +3,7 @@
 #include "gui/Window.h"
 #include "gui/Tab.h"
 #include "Experience.h"
-#include "Audio_Options.h"
+#include "Audio_Tab.h"
 /*
    _______    _________
   | Audio |  | Keybord | 
@@ -65,7 +65,7 @@ struct Options_Window : public Window
     {
       if (audio.check_mouse_and_execute(x,y)) 
       {
-        audio.active = true;
+        //audio.active = true;
         //dsp.active = false;
         //instr.active = false;
         return true;
@@ -73,7 +73,7 @@ struct Options_Window : public Window
       return false;
     }
     Tab audio;
-    void draw () { audio.draw(options_window.screen); }
+    void draw () { audio.draw(options_window.rc.screen); }
     static int switch_to_audio_tab(void *data);
   } tabs;
 

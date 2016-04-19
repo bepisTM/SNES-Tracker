@@ -5,7 +5,8 @@ uint8_t *BaseD::IAPURAM;*/
 #include "Main_Window.h"
 #include "Menu_Bar.h"
 #include "File_System_Context.h"
-
+#include "stub.h"
+#include <getopt.h>
 char BaseD::tmpbuf[500];
 
 // this doesn't belong in BaseD
@@ -35,8 +36,8 @@ char BaseD::now_playing[1024];
 //Experience * BaseD::exp=NULL;
 
 //Menu_Bar * BaseD::menu_bar=NULL;
-Options_Window * BaseD::options_window=NULL;
-Spc_Export_Window * BaseD::spc_export_window=NULL;
+// Options_Window * BaseD::options_window=NULL;
+// Spc_Export_Window * BaseD::spc_export_window=NULL;
 
 Cursors * BaseD::cursors=NULL;
 
@@ -203,7 +204,7 @@ void get_file_list_ext(const fs::path& root, const std::string& ext, std::vector
 
 }
 
-static void BaseD::init_cmdline(int &argc, char **argv)
+void BaseD::init_cmdline(int &argc, char **argv)
 {
   int res;
   static struct option long_options[] = {
@@ -623,25 +624,21 @@ void BaseD::reload(char **paths/*=NULL*/, int numpaths/*=0*/)
   else {
     // skip path sep
     g_real_filename++;
-  } 
-  //main_window->reload();
+  }
+
   // Load file
   BaseD::path = path;
   handle_error( player->load_file( path ) );
   
   IAPURAM = player->spc_emu()->ram();
-  //Memory::IAPURAM = IAPURAM;  
-  // report::memsurface.init
   
   report::memsurface.clear();
 
   memset(report::used, 0, sizeof(report::used));
   memset(report::used2, 0, sizeof(report::used2));
-  //if (!mouseover_hexdump_area.address)mouseover_hexdump_area.address =0;
   report::last_pc = -1;
   player->mute_voices(voice_control.muted);
   start_track( 1, path );
-//  voice_control.was_keyed_on = 0;
   
   player->ignore_silence();
 
@@ -660,10 +657,11 @@ void BaseD::reload(char **paths/*=NULL*/, int numpaths/*=0*/)
       game++; // skip path separator
   }
 
-  //main_window->is_onetime_draw_necessary=true;
   update_track_tag();
-  if (grand_mode == MAIN)
-    main_window->draw_track_tag();
+  
+  STUB("FIXME draw_track_tag signal to mainwindow");
+  // if (grand_mode == MAIN)
+  //   main_window->draw_track_tag();
 
   char title [512];
   //if (using_playlist)
@@ -678,8 +676,8 @@ void BaseD::reload(char **paths/*=NULL*/, int numpaths/*=0*/)
         game, 1, 1, player->track_info().song,
         seconds / 60, seconds % 60 );
   }*/
-  main_window->set_window_title(title);
-
+  STUB("FIXME setmainwindow title");
+  //main_window->set_window_title(title);
 }
 
 void BaseD::restart_track()

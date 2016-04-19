@@ -4,7 +4,7 @@
 #include <assert.h>
 
 Clickable_Text::Clickable_Text() : 
-Clickable_Rect(action,data),
+Clickable_Rect(),
 str("")
 {}
 

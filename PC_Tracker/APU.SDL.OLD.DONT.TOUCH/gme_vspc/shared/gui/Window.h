@@ -5,21 +5,21 @@
 
 struct Render_Collection
 {
-  // void clear_screen()
-  // {
-  //   SDL_FillRect(screen, NULL, 0);
-  //   SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
-  //   SDL_RenderClear(sdlRenderer);
-  //   SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-  //   SDL_RenderPresent(sdlRenderer);
-  // }
-  // void update_screen()
-  // {
-  //   SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
-  //   SDL_RenderClear(sdlRenderer);
-  //   SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
-  //   SDL_RenderPresent(sdlRenderer);
-  // }
+  void clear_screen()
+  {
+    SDL_FillRect(screen, NULL, 0);
+    SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
+    SDL_RenderClear(sdlRenderer);
+    SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+    SDL_RenderPresent(sdlRenderer);
+  }
+  void update_screen()
+  {
+    SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
+    SDL_RenderClear(sdlRenderer);
+    SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+    SDL_RenderPresent(sdlRenderer);
+  }
   void destroy()
   {
     if (screen)
@@ -38,19 +38,12 @@ struct Render_Collection
       SDL_DestroyRenderer(sdlRenderer);
       sdlRenderer = NULL;
     }
-      
-    if(sdlWindow)
-    {
-      SDL_DestroyWindow(sdlWindow);
-      sdlWindow = NULL;
-    }
   }
 
-  SDL_Window *sdlWindow = NULL;
+  
   SDL_Renderer *sdlRenderer = NULL;
   SDL_Texture *sdlTexture = NULL;
   SDL_Surface *screen = NULL;
-  Uint32 windowID=0;
   SDL_Rect rect;
 };
 
@@ -60,6 +53,9 @@ struct Window : public Experience
   Window(int width, int height, const char *title);
   ~Window();
   Render_Collection rc;
+
+  Uint32 windowID=0;
+  SDL_Window *sdlWindow = NULL;
 
   
   std::string title;

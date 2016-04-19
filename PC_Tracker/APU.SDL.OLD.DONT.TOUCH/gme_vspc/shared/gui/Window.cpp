@@ -10,11 +10,11 @@ Window::Window(int width, int height, const char *title)
 
 void Window::init()
 {
-  SDL_Window &sdlWindow = rc.sdlWindow;
-  SDL_Renderer &sdlRenderer = rc.sdlRenderer;
-  SDL_Texture &sdlTexture = rc.sdlTexture;
-  SDL_Surface &screen = rc.screen;
-  Uint32 &windowID = rc.windowID;
+  //SDL_Window *sdlWindow = sdlWindow;
+  SDL_Renderer *sdlRenderer = rc.sdlRenderer;
+  SDL_Texture *sdlTexture = rc.sdlTexture;
+  SDL_Surface *screen = rc.screen;
+  //Uint32 &windowID = rc.windowID;
   SDL_Rect &rect = rc.rect;
 
   this->destroy();
@@ -61,12 +61,17 @@ void Window::init()
 
 void Window::set_title(const char *str)
 {
-  SDL_SetWindowTitle(rc.sdlWindow, str);
+  SDL_SetWindowTitle(sdlWindow, str);
 }
 
 void Window::destroy()
 {
   rc.destroy();
+  if(sdlWindow)
+  {
+    SDL_DestroyWindow(sdlWindow);
+    sdlWindow = NULL;
+  }
 }
 
 Window::~Window()
@@ -88,8 +93,8 @@ void Window::update_screen()
 void Window::show()
 {
   SDL_Log("Window::show()");
-  SDL_ShowWindow(rc.sdlWindow);
-  SDL_RaiseWindow(rc.sdlWindow);
+  SDL_ShowWindow(sdlWindow);
+  SDL_RaiseWindow(sdlWindow);
   oktoshow = true;
   //init();
 }
@@ -97,14 +102,14 @@ void Window::show()
 void Window::raise()
 {
   SDL_Log("Window::raise()");
-  SDL_RaiseWindow(rc.sdlWindow);
+  SDL_RaiseWindow(sdlWindow);
 }
 
 void Window::hide()
 {
   //this->destroy();
   //SDL_SetWindowGrab(sdlWindow, SDL_FALSE);
-  SDL_HideWindow(rc.sdlWindow);
+  SDL_HideWindow(sdlWindow);
   oktoshow = false;
   //SDL_SetWindowPosition(sdlWindow, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED);
 }

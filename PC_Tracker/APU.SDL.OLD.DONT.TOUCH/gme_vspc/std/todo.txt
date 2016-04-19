@@ -1,18 +1,35 @@
 Refactor Todo
 -------------
+00B include appropriate header locations
+00A WTF is Mem_Tab.c i = 32 + SCREEN_Y_OFFSET in draw()
+009 Put widget processing code into the widgets themselves
+Main_Memory_Area and Mouse_HexdumpArea out of Mem_Tab
+PortTool
+Voice Pitch Widget
+Voice Volumes Widget
+
+--> They can all be their own Experiences
+
+008 BaseD::reload() should not be calling main_window update functions.. instead, try having a callback func
+associated with BaseD::reload() .. which is called during reload to tell the callback a new song has been
+loaded.
+007 Main_Memory_Area and Mouse_Hexdump_Area classes should both tap into a "back-end" class that
+is the sync between the two.
 006 Make Tab_Collection class
 005 automatic tab "active" thing..
 004 Careful, alot of mem_tab references are still referring to main_window
-003 Keyboard Shortcuts Modular per GUI interface
+003 (later) Keyboard Shortcuts Modular per GUI interface
   \-> This could be modular per Experience
-002 Remove SDL implementation from BRR class
-001 Remove all references to GrandMode
+002 (later) Remove SDL implementation from BRR class
+001 OK Remove all references to GrandMode
 --- Removing Midi class reference
 ---- I would like to register a callback function with Midi events received ..
 ----- this function can be registered when in the Instrument Tab and removed upon exit
 
 New Numbered TODO List
 ----------------------
+017 When creating the Tracker "tracker" section, First just create the "Backend" class..
+eg. the data that comprises one "row" of tracker data, per channel
 016 [Mem_Tab] BRR sample detection seems to be broken (right click over memory area BRR)
 015 SNES Tracker window icon / OSX Dock icon / "/usr/share" icons etc.
   usually these icons must be in a set of various dimensions

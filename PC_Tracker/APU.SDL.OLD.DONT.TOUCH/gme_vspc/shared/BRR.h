@@ -4,7 +4,6 @@
 #include "utility.h"
 #include "gme/Spc_Dsp_Register_Map_Interface.h"
 #include "BaseD.h"
-#include "Instrument_Window.h"
 #include "nfd.h"
 
 struct BRR

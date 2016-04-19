@@ -61,8 +61,8 @@ void Main_Memory_Area::log_the_fucking_address_for_the_fucking_context_window()
   context.addr_when_user_right_clicked = mouse_addr;
 }
 
-Main_Memory_Area::Main_Memory_Area(Mouse_Hexdump_Area *mouse_hexdump_area, uint16_t *dir) :
-mouse_hexdump_area(mouse_hexdump_area), dir(dir),
+Main_Memory_Area::Main_Memory_Area(Mouse_Hexdump_Area *mouse_hexdump_area) :
+mouse_hexdump_area(mouse_hexdump_area),
 context(this)
 {
   

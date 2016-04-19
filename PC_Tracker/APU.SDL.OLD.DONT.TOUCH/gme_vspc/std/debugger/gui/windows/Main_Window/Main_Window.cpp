@@ -1,9 +1,11 @@
 #include "Main_Window.h"
+#include "stub.h"
 
 Main_Window::Main_Window(int width, int height, const char *title) :
-Window(width, height, title)
+Window(width, height, title),
+Tabs(switch_tab)
 {
-  cur_tab_exp = (Experience *)&mem_tab;
+  exp = (Experience *)&mem_tab;
 }
 
 // update window title with track info
@@ -32,93 +34,91 @@ void Main_Window::update_window_title()
 
 void Main_Window::Tabs::preload(int x, int y)
 {
+  int i=0;
   // init Tabs
-  mem.rect.x = x;
-  mem.rect.y = y; // + h + CHAR_HEIGHT*2;
+  tabs[i].rect.x = x;
+  tabs[i++].rect.y = y;
   //
-  dsp.rect.x = mem.rect.x + mem.horiz_pixel_length() + CHAR_WIDTH;
-  dsp.rect.y = mem.rect.y;
+  tabs[i].rect.x = tabs[i-1].rect.x + tabs[i-1].horiz_pixel_length() + CHAR_WIDTH;
+  tabs[i++].rect.y = y;
   //
-  instr.rect.x = dsp.rect.x + dsp.horiz_pixel_length() + CHAR_WIDTH;
-  instr.rect.y = mem.rect.y;
+  tabs[i].rect.x = tabs[i-1].rect.x + tabs[i-1].horiz_pixel_length() + CHAR_WIDTH;
+  tabs[i++].rect.y = y;
 
-  rect = {mem.rect.x, mem.rect.y, instr.rect.x + instr.rect.w, CHAR_HEIGHT};
+  rect = {tabs[0].rect.x, tabs[0].rect.y, tabs[num_tabs-1].rect.x + tabs[num_tabs-1].rect.w, CHAR_HEIGHT};
 }
 
 void Main_Window::Tabs::draw()
 {
-  // tmpfix
-  // if (BaseD::grand_mode != logged_grand_mode)
-  // {
-  //   logged_grand_mode = BaseD::grand_mode;
-
-  //   if (BaseD::grand_mode == BaseD::GrandMode::MAIN)
-  //   {
-  //     mem.active = true;
-  //     dsp.active = false;
-  //     instr.active = false;
-  //   }
-  //   else if (BaseD::grand_mode == BaseD::GrandMode::DSP_MAP)
-  //   {
-  //     mem.active = false;
-  //     dsp.active = true;
-  //     instr.active = false;
-  //   }
-  //   else if (BaseD::grand_mode == BaseD::GrandMode::INSTRUMENT)
-  //   {
-  //     mem.active = false;
-  //     dsp.active = false;
-  //     instr.active = true;
-  //   }    
-  // }
-  mem.draw();
-  dsp.draw();
-  instr.draw();
+  for (int i=0; i < num_tabs; i++)
+  {
+    tabs[i].draw(rc.screen, i == which_active);
+  }
 }
 
 void Main_Window::one_time_draw()
 {
   tabs.preload(menu_bar.context_menus.x, 
     menu_bar.context_menus.y + menu_bar.context_menus.h + CHAR_HEIGHT*2);
-  cur_tab_exp->one_time_draw();
+  exp->one_time_draw();
 }
 
 void Main_Window::run()
 {
-  cur_tab_exp->run();
+  exp->run();
 }
 
 void Main_Window::draw()
 {
   tabs.draw();
-  cur_tab_exp->draw();
+  exp->draw();
   menu_bar.draw();
 }
 
 int Main_Window::receive_event(SDL_Event &ev)
 {
   // Do global stuff here
-  if (ev.type == SDL_MOUSEBUTTONDOWN)
+  switch (ev.type)
   {
+  case SDL_MOUSEBUTTONDOWN:
     if (!BaseD::player->has_no_song)
     {
       bool r = tabs.check_mouse_and_execute(ev.button.x, ev.button.y);
       if (r) return r;
     }
+    break;
+
+  case SDL_KEYDOWN:
+    int scancode = ev.key.keysym.sym;
+    //bool is_shift_pressed=false;
+    switch (scancode)
+    {
+    case SDLK_SLASH:
+        cycle_tabs();
+        break;
+    }
+    break;
+
+  default:break;
   }
 
+
   // then :
-  cur_tab_exp->receive_event(ev);
+  exp->receive_event(ev);
 }
 
+void Main_Window::cycle_tabs()
+{
+  STUBBED("Main_Window::cycle_tabs");
+}
 // dunno if I'll need this
 void Main_Window::activate()
 {
-
+  STUBBED("Main_Window::activate");
 }
 void Main_Window::deactivate()
 {
-
+  STUBBED("Main_Window::deactivate");
 }
 
 void Main_Window::check_quit(SDL_Event &ev)
@@ -134,80 +134,54 @@ void Main_Window::check_quit(SDL_Event &ev)
     break;
 
     case SDL_KEYDOWN:
-    if (ev.key.keysym.sym == SDLK_ESCAPE)
+    switch (ev.key.keysym.sym)
     {
-      if (!locked() && mode != MODE_EDIT_APU_PORT)
-      {
-        fprintf(stderr, "penis88\n");
-        /*if (!g_cfg.nosound) {
-          SDL_PauseAudioDevice(Audio_Context::audio->devices.id, 1);
-        }*/
-        quitting = true;
-      }
-      
+      default:break;
     }
+    break;
+
+    default:break;
   }
 }
 
-void Main_Window::switch_mode(int nmode)
+int Main_Window::switch_tab(void *winp, int ntab)
 {
-  if (mode == nmode)
+  Main_Window *mw = (Main_Window *)winp;
+  if (mw->tabs.active == ntab)
     return;
-  mode = nmode;
+  mode = ntab;
   clear_screen();
-  //draw_menu_bar();
 
-  // If we switched from instrument window, need to re-enable regular spc playback
-  
-
-  if (nmode == GrandMode::MAIN)
+  if (ntab == Tab::MEM)
   {
     if_exp_is_instr_window_then_restore_spc();
-    if (main_window)
-      exp = (Experience*)main_window;
-    else 
-    {
-      fprintf(stderr, "NO MAIN WINDOW!?!\n");
-      exit(2);
-    }
+    exp = (Experience*)&main_tab;
     main_window->one_time_draw();
   }
-  else if (nmode == GrandMode::DSP_MAP)
+  else if (ntab == Tab::DSP_MAP)
   {
-    if (dsp_window)
-      exp = (Experience*)dsp_window;
-    else 
-    {
-      fprintf(stderr, "NO DSPWINDOW!?!\n");
-      exit(2);
-    }
+    exp = (Experience*)&dsp_tab;
   }
-  else if (nmode == GrandMode::INSTRUMENT)
+  else if (ntab == Tab::INSTRUMENT)
   {
-    if (instr_window)
-      exp = (Experience*)instr_window;
-    else
-    {
-      fprintf(stderr, "NO INSTRUMENT_WINDOW!?!\n");
-      exit(2);
-    }
-    instr_window->one_time_draw();
+    exp = (Experience*)&instr_tab;
+    instr_tab.one_time_draw();
   }
 }
 
-int Main_Window::switch_to_memory(void *data)
+int Main_Window::Tabs::switch_to_memory(void *data)
 {
-  (Main_Window *)data->switch_mode(Tab::MEM);
+  (Main_Window *)data->switch_tab(Tab::MEM);
   return 0;
 }
-int Main_Window::switch_to_dsp(void *data)
+int Main_Window::Tabs::switch_to_dsp(void *data)
 {
-  (Main_Window *)data->switch_mode(Tab::DSP_MAP);
+  (Main_Window *)data->switch_tab(Tab::DSP_MAP);
   return 0;
 }
-int Main_Window::switch_to_instrument(void *data)
+int Main_Window::Tabs::switch_to_instrument(void *data)
 {
-  (Main_Window *)data->switch_mode(Tab::INSTRUMENT);
+  (Main_Window *)data->switch_tab(Tab::INSTRUMENT);
   return 0;
 }
 
@@ -229,9 +203,9 @@ void Main_Window::toggle_pause()
 
 void Main_Window::if_exp_is_instr_window_then_restore_spc()
 {
-  if (exp == (Experience*)instr_window)
+  if (exp == (Experience*)&instr_tab)
   {
-    instr_window->restore_spc(false); // restore SPC but don't necessarily resume playing
+    instr_tab.restore_spc(false); // restore SPC but don't necessarily resume playing
   }
 }
 

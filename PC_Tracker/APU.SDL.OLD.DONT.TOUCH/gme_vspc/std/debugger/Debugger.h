@@ -28,7 +28,7 @@ public:
   SDL_DisplayMode monitor_display_mode;
   //
   //std::map<SDL_WindowID_Type, Window *> window_map;
-  Experience *sub_window_experience = NULL;
+  Experience *exp = NULL, *sub_window_experience = NULL;
   
   Main_Window main_window;
   Options_Window options_window;

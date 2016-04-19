@@ -4,46 +4,31 @@
 #include "Mem_Tab.h"
 #include "Dsp_Tab.h"
 #include "Instr_Tab.h"
+#include "Menu_Bar.h"
 
 // Some of these functions might need a BaseD wrapper
 // going to have to look at exp Experience* 
 
 // Tabs need to construct with Main_Window's render objects
 
-class Main_Window : public Window
+class Main_Window : public Window, public Player_Context
 {
+public:
   Main_Window(int &argc, char **argv);
 
   void update_window_title();
 
-  void switch_mode(int mode);
-  int switch_to_memory(void *data);
-  int switch_to_dsp(void *data);
-  int switch_to_instrument(void *data);
+  int switch_tab(void *inst, int ntab);
 
   void toggle_pause();
   void if_exp_is_instr_window_then_restore_spc();
 
-  Experience *cur_tab_exp;
+  Experience *exp;
 
   Menu_Bar menu_bar;
   Mem_Tab mem_tab;
-  Dsp_Tab dsp_window;
-  Instr_Tab instr_window;
-
-  enum Tab
-  {
-    NONE=0,
-    MEM,
-    DSP_MAP,
-    INSTRUMENT,
-  };
-
-  Tab active_tab() { return currently_open_tab; }
-
-  Tab currently_open_tab = Tab::MEM;
-  Tab last_open_tab = Tab::NONE;
-  // this will be used ^ in the event processing, drawing, etc.
+  Dsp_Tab dsp_tab;
+  Instr_Tab instr_tab;
 
   struct Tabs
   {
@@ -55,10 +40,15 @@ class Main_Window : public Window
       instr,
       num_tabs
     };
+    int which_active = tabs[mem].id;
+    int which_last = tabs[mem].id;
     void preload(int x, int y);
-    Tabs() : tabs[mem](3,3, "Mem", BaseD::switch_to_memory, NULL, true),
-      tabs[dsp](3,3, "DSP", BaseD::switch_to_dsp, NULL),
-      tabs[instr](3,3, "INSTR", BaseD::switch_to_instrument, NULL)
+
+    Tabs(int (*callback)(void *data, int id)=NULL, void *window=NULL) :
+      tabs{
+        Tab(3,3, "Mem", callback, window),
+        Tab(3,3, "DSP", callback, window),
+        Tab(3,3, "INSTR", callback, window)}
     {
 
     }
@@ -68,41 +58,22 @@ class Main_Window : public Window
       {
         if(tabs[i].check_mouse_and_execute(x,y))
         {
-          
+          which_active = tabs[i].id;
+          return true;
         }
-      }
-      if (mem.check_mouse_and_execute(x,y)) 
-      {
-        // mem.active = true;
-        // dsp.active = false;
-        // instr.active = false;
-        return true;
-      }
-      if (dsp.check_mouse_and_execute(x,y)) 
-      {
-        // mem.active = false;
-        // dsp.active = true;
-        // instr.active = false;
-        return true;
-      }
-      if (instr.check_mouse_and_execute(x,y))
-      {
-        // mem.active = false;
-        // dsp.active = false;
-        // instr.active = true;
-        return true;
       }
       return false;
     }
-    Tab tabs[num_tabs]; //mem, dsp, instr;
-    void draw ();
-    static int memory(void *data);
-    static int DSP(void *data);
-    static int Instrument(void *data);
+    Tab tabs[num_tabs];
 
-    //int logged_grand_mode=BaseD::GrandMode::MAIN;
+    void draw ();
+    void run() {}
+    // static int memory(void *data);
+    // static int DSP(void *data);
+    // static int Instrument(void *data);
   } tabs;
 
 private:
   void check_quit(SDL_Event &ev);
+  void cycle_tabs();
 };

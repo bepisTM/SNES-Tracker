@@ -2,7 +2,6 @@
 #include "utility.h"
 #include "File_System_Context.h"
 #include "platform.h"
-#include "Instrument_Window.h"
 //#include <stdlib.h>
 #include "Options_Window.h"
 #include "gui/Spc_Export_Window.h"

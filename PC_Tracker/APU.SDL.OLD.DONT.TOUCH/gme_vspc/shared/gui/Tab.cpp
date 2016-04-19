@@ -2,16 +2,12 @@
 #include "Colors.h"
 #include "DEBUGLOG.h"
 
-bool Tab::check_mouse_and_execute(int x, int y, void *newdata/*=NULL*/)
-{
-  return Clickable_Rect::check_mouse_and_execute(x,y,newdata);
-  //active=true;
-}
 int Tab::horiz_pixel_length()
 {
   return str.length()*CHAR_WIDTH + pad_w_size*2;
 }
-void Tab::draw(SDL_Surface *screen/*=Render_Context::screen*/)
+
+void Tab::draw(SDL_Surface *screen/*=Render_Context::screen*/, bool active/*=false*/)
 {
   Uint32 *bg_color, *fg_color;
 
@@ -33,17 +29,15 @@ void Tab::draw(SDL_Surface *screen/*=Render_Context::screen*/)
     *bg_color);
 }
 
-Tab::Tab(bool active/*=false*/) : Clickable_Rect(NULL,NULL)
+Tab::Tab() : Clickable_Rect_Id(NULL,NULL)
 { }
 
 Tab::Tab(int x, int y, int pad_size, std::string str, 
-  int (*action)(void *data)/*=NULL*/, void *data/*=NULL*/, bool active/*=false*/) : 
-Clickable_Rect(action,data),
+  int (*action)(void *data,int id)/*=NULL*/, void *data/*=NULL*/) : 
+Clickable_Rect_Id(action,data),
 str(str),
-active(active),
 pad_w_size(pad_size),
 pad_h_size(pad_size)
-
 {
   rect.x = x;
   rect.y = y;
@@ -52,10 +46,9 @@ pad_h_size(pad_size)
 }
 
 Tab::Tab(int x, int y, int pad_w_size, int pad_h_size, std::string str,
-  int (*action)(void *data)/*=NULL*/, void *data/*=NULL*/, bool active/*=false*/) : 
-Clickable_Rect(action,data),
+  int (*action)(void *data, int id)/*=NULL*/, void *data/*=NULL*/) : 
+Clickable_Rect_Id(action,data),
 str(str),
-active(active),
 pad_w_size(pad_w_size),
 pad_h_size(pad_h_size)
 {
@@ -66,10 +59,9 @@ pad_h_size(pad_h_size)
 }
 
 Tab::Tab(int pad_w_size, int pad_h_size, std::string str,
-  int (*action)(void *data)/*=NULL*/, void *data/*=NULL*/, bool active/*=false*/) : 
-Clickable_Rect(action,data),
+  int (*action)(void *data, int id)/*=NULL*/, void *data/*=NULL*/) : 
+Clickable_Rect_Id(action,data),
 str(str),
-active(active),
 pad_w_size(pad_w_size),
 pad_h_size(pad_h_size)
 {

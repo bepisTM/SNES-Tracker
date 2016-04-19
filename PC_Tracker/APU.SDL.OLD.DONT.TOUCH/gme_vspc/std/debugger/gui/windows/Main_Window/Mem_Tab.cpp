@@ -46,32 +46,7 @@ void Mem_Tab::draw()
   {
     time_cur = SDL_GetTicks();
 
-    
-
-    //do_scroller(time_cur - time_last);
     sdlfont_drawString(screen, MEMORY_VIEW_X, MEMORY_VIEW_Y-10, "spc memory:");
-
-    /*tmprect.x = MEMORY_VIEW_X-1;
-    tmprect.y = MEMORY_VIEW_Y-1;
-    tmprect.w = 1;
-    tmprect.h = 512+2;
-    SDL_FillRect(screen, &tmprect, Colors::white);
-    tmprect.x = MEMORY_VIEW_X-1;
-    tmprect.y = MEMORY_VIEW_Y-1;
-    tmprect.w = 512+2;
-    tmprect.h = 1;
-    SDL_FillRect(screen, &tmprect, Colors::white);
-    tmprect.x = MEMORY_VIEW_X-1 + 513;
-    tmprect.y = MEMORY_VIEW_Y-1;
-    tmprect.w = 1;
-    tmprect.h = 512+2;
-    SDL_FillRect(screen, &tmprect, Colors::white);
-    tmprect.x = MEMORY_VIEW_X-1;
-    tmprect.y = MEMORY_VIEW_Y-1 + 513;
-    tmprect.w = 512+2;
-    tmprect.h = 1;
-    SDL_FillRect(screen, &tmprect, Colors::white);*/
-
     
     fade_arrays();      
     
@@ -85,8 +60,6 @@ void Mem_Tab::draw()
     i = 32 + SCREEN_Y_OFFSET;  
     if (player->has_no_song) 
     {
-      //draw_menu_bar();
-      //SDL_UpdateRect(screen, 0, 0, 0, 0);
       SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
       SDL_RenderClear(sdlRenderer);
       SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
@@ -170,10 +143,7 @@ void Mem_Tab::draw()
   else
   {
     draw_mouse_address();
-    //draw_menu_bar();
     
-    
-    //SDL_UpdateRect(screen, 0, 0, 0, 0);
     SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
     //SDL_SetRenderDrawColor(sdlRenderer, 255, 0, 0, 255);
     SDL_RenderClear(sdlRenderer);
@@ -191,11 +161,7 @@ void Mem_Tab::draw()
 
 int Mem_Tab::receive_event(SDL_Event &ev)
 {
-  /* menu bar */
   int r;
-  
-  //likely not needed??
-  //check_quit(ev);
 
   if (player->has_no_song) return;
 
@@ -205,8 +171,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
     bool b = tempo.slider->receive_event(ev);
     if (a || b) return;
   }
-  /*if (tempo.slider)
-    if (tempo.slider->receive_event(ev)) return;*/
   
   dblclick::check_event(&ev);
 
@@ -298,7 +262,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
             y -= MEMORY_VIEW_Y;
             x /= 2;
             y /= 2;
-            //set_addr(y*256+x);
             
             main_memory_area.mouse_addr = y*256+x;
             if (!locked()) {
@@ -317,7 +280,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
       switch(scancode)
       {
         case SDLK_s:
-          //fprintf(stderr, "(%d,%d)\n", ev.motion.x, ev.motion.y);
           voice_control.checkmouse((Uint16&)mouse::x, (Uint16&)mouse::y, SDL_BUTTON_RIGHT); 
         break;
         case SDLK_UP:
@@ -350,14 +312,14 @@ int Mem_Tab::receive_event(SDL_Event &ev)
         val = !val;
         player->spc_write_dsp(dsp_reg::kon,val);
       }
-      else if (scancode == SDLK_m)
-      {
-        //SCREEN_Y_OFFSET++;
-        static int val=0;
-        val = !val;
-        player->spc_write_dsp(dsp_reg::koff,val);
-        BaseD::switch_mode(GrandMode::INSTRUMENT);
-      }
+      // else if (scancode == SDLK_m)
+      // {
+      //   //SCREEN_Y_OFFSET++;
+      //   static int val=0;
+      //   val = !val;
+      //   player->spc_write_dsp(dsp_reg::koff,val);
+      //   BaseD::switch_mode(INSTRUMENT);
+      // }
       if (ev.key.keysym.sym == SDLK_u)
       {
         player->emu()->seek(10000);
@@ -378,12 +340,12 @@ int Mem_Tab::receive_event(SDL_Event &ev)
         //player->spc_write(0xf3, 0);
         //player->spc_write(0xf3, 1);
       }
-      else if (ev.key.keysym.sym == SDLK_i)
-      {
-        BaseD::switch_to_instrument(NULL);
-        //player->gain += 0.1;
-        //fprintf(stderr, "gain = %f", player->gain);
-      }
+      // else if (ev.key.keysym.sym == SDLK_i)
+      // {
+      //   BaseD::switch_to_instrument(NULL);
+      //   //player->gain += 0.1;
+      //   //fprintf(stderr, "gain = %f", player->gain);
+      // }
       else if (scancode == SDLK_o)
       {
         player->filter_is_active = !player->filter_is_active;
@@ -397,7 +359,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
       else if (scancode == SDLK_r)
       {
         restart_current_track();
-        // in the program .. this would have to change otherwise
       }
       if (mode == MODE_NAV)
       {
@@ -409,36 +370,28 @@ int Mem_Tab::receive_event(SDL_Event &ev)
             voice_control.toggle_mute_all();
           if (i > 0 && i < 9)
             voice_control.toggle_mute(i); // channel num
-          //else
-            //voice_control.mute_all();
         }
 
         switch (scancode)
         {
-          case SDLK_d:
-          case SDLK_SLASH:
-          BaseD::switch_mode(GrandMode::DSP_MAP);
-          break;
-
           case SDLK_TAB:
             if (mod & KMOD_SHIFT)
             {
-              prev_track25();
+              BaseD::prev_track25();
             }
             else 
             {
-              next_track25();
+              BaseD::next_track25();
             }
-            //goto reload;
-            this->reload();
+            BaseD::reload();
           break;
         }
 
 
         if (scancode == SDLK_LEFT)
-          prev_track();
+          BaseD::prev_track();
         else if (scancode == SDLK_RIGHT)
-          next_track();
+          BaseD::next_track();
         else if (scancode == SDLK_c)
         {
           mouse::show = !mouse::show;
@@ -460,9 +413,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
           mouseover_hexdump_area.submode = Mouse_Hexdump_Area::EASY_EDIT;
           // order matters .. call here: 
           lock();
-          //mouseover_hexdump_area.addr_being_edited = mouseover_hexdump_area.address+(mouseover_hexdump_area.res_y*8)+mouseover_hexdump_area.res_x
-          //mouseover_hexdump_area.res_x = 1; //mouseover_hexdump_area.address_remainder;
-          
           mouseover_hexdump_area.cursor.start_timer();
         }
         if (ev.key.keysym.sym == SDLK_ESCAPE)
@@ -472,20 +422,20 @@ int Mem_Tab::receive_event(SDL_Event &ev)
             DEBUGLOG("eegbeb");
             unlock(); 
           }
-          /*else
+          else
           {
             fprintf(stderr, "penis2\n");
             if (!g_cfg.nosound) {
               SDL_PauseAudio(1);
             }
             quitting = true;
-          }*/
+          }
         }
       }
       else if (mode == MODE_EDIT_MOUSE_HEXDUMP)
       {
         int scancode = ev.key.keysym.sym;
-        if (ev.key.keysym.mod & (CMD_CTRL_KEY))  // GUI in SDL2
+        if (ev.key.keysym.mod & (CMD_CTRL_KEY))
         {
           //fprintf(stderr, "EOO");
           if (scancode == SDLK_LEFT)
@@ -501,7 +451,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
           ((scancode >= 'a') && (scancode <= 'f')) )
         {
           uint32_t i=0;
-          //int addr;
           Uint16 addr = mouseover_hexdump_area.addr_being_edited;
           //fprintf(stderr, "Addr = %04x\n", addr);
           
@@ -534,17 +483,14 @@ int Mem_Tab::receive_event(SDL_Event &ev)
           {
             i <<= 4;
             i &= 0xf0;
-            //IAPURAM[mouseover_hexdump_area.address+(mouseover_hexdump_area.res_y*8)+mouseover_hexdump_area.res_x] &= 0x0f;
             mouseover_hexdump_area.tmp_ram &= 0x0f;
           }
           else
           {
             i &= 0x0f;
-            //IAPURAM[mouseover_hexdump_area.address+(mouseover_hexdump_area.res_y*8)+mouseover_hexdump_area.res_x] &= 0xf0;
             mouseover_hexdump_area.tmp_ram &= 0xf0;
           }
 
-          //IAPURAM[mouseover_hexdump_area.address+(mouseover_hexdump_area.res_y*8)+mouseover_hexdump_area.res_x] |= i;
           mouseover_hexdump_area.tmp_ram |= i;
 
           maybe_write_to_mem();
@@ -568,7 +514,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
           while (i < (0x10000) )
           {
             player->spc_write(i-1, player->spc_read(i));
-            //IAPURAM[i-1] = IAPURAM[i];
             i++;
           }
           mouseover_hexdump_area.dec_cursor_pos();
@@ -582,7 +527,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
           while (i < (0x10000) )
           {
             player->spc_write(i, player->spc_read(i+1));
-            //IAPURAM[i] = IAPURAM[i+1];
             i++;
           }
           mouseover_hexdump_area.highnibble=1;
@@ -611,7 +555,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
         else if (scancode == SDLK_RETURN)
         {
           maybe_write_to_mem(true);
-          //exit_edit_mode();
         }
       }   
       else if (mode == MODE_EDIT_APU_PORT)
@@ -690,8 +633,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
           else
           {
             Uint8 tmp = port_tool.tmp[port_tool.portnum] + 1;
-            //tmp &= 0x0f;
-            //port_tool.tmp[port_tool.portnum] &= 0xf0;
             port_tool.tmp[port_tool.portnum] = tmp;
           }
         }
@@ -745,7 +686,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
           // editor stuffz
           Uint8 oldmode = mode;
           mode = MODE_EDIT_MOUSE_HEXDUMP;
-          
 
           int res_x, res_y, highnibble;
 
@@ -781,9 +721,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
           // order matters .. call here: 
           lock(1,0,0,res_x,res_y);
           mouseover_hexdump_area.highnibble = highnibble;
-          //mouseover_hexdump_area.res_x = res_x;
-          //mouseover_hexdump_area.res_y = res_y;
-
           
           if (mouseover_hexdump_area.res_y == 16) mouseover_hexdump_area.res_y = 15;
         }
@@ -943,8 +880,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
     } break;
     case SDL_MOUSEBUTTONDOWN:           
       {
-
-        //if (tempo.check_mouse_and_execute(ev.motion.x, ev.motion.y)) return;
         voice_control.checkmouse((Uint16&)ev.motion.x, (Uint16&)ev.motion.y, ev.button.button); 
 
         bool is_in_memory_window= (ev.motion.x >= MEMORY_VIEW_X && 
@@ -961,7 +896,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
             main_memory_area.log_the_fucking_address_for_the_fucking_context_window();
             main_memory_area.context.menu.is_active = true;
             
-            //int r = ;
             switch (main_memory_area.brr.check_brr(&main_memory_area.context.addr_when_user_right_clicked))
             {
               case BRR::NOT_A_SAMPLE:
@@ -1014,8 +948,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
               ev.motion.y >= Screen::echoE.y &&
               ev.motion.y < (Screen::echoE.y + Screen::echoE.h) )
         {
-          // toggle_echo()
-          //DEBUGLOG("HIE SXY");
           player->spc_emu()->toggle_echo();
         }
 
@@ -1205,9 +1137,8 @@ void Mem_Tab::unlock()
 
 
 Mem_Tab::Mem_Tab() : 
-main_memory_area(&mouseover_hexdump_area, &dir),
+main_memory_area(&mouseover_hexdump_area),
 port_tool(&mouseover_hexdump_area.cursor)
-//echo_on("on", BaseD::toggle_echo, NULL)
 {
   time_cur = time_last = SDL_GetTicks();
   report::memsurface.init();
@@ -1278,12 +1209,6 @@ void Mem_Tab::draw_block_usage_bar()
     is_first_run=true;
   }
 }
-
-/*Mem_Tab::~Mem_Tab()
-{
-  if (gain_slider)
-    delete gain_slider;
-}*/
 
 void Mem_Tab::draw_mouse_address()
 {

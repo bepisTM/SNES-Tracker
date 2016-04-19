@@ -8,9 +8,13 @@
 Debugger::Debugger(int &argc, char **argv) :
 main_window(argc,argv)
 {
+  // SDL STUFF!!
+  Colors::precompute(main_window.rc.screen);
+  dblclick::init();
+
   BaseD::init_cmdline(argc, argv);
   // support the Render_Context for now
-  Render_Context::load_from_window(main_window);
+  Render_Context::load_from_window(&main_window);
 
   // I am naturally against "de-capsulating these window objs"
   // BaseD::main_window = &main_window;
@@ -18,7 +22,7 @@ main_window(argc,argv)
   // BaseD::spc_export_window = &spc_export_window;
 
   BaseD::cursors = &cursors;
-  //exp = &main_window;
+  exp = &main_window;
 
   //window_map.insert( std::pair<Uint32, Window*>())
   int i=0;
@@ -177,7 +181,7 @@ void Debugger::handle_events()
             if (ev.window.windowID == Render_Context::windowID)
             {
               // OFF context menus
-              menu_bar.context_menus.deactivate_all();
+              main_window.menu_bar.context_menus.deactivate_all();
             }
           }
           break;
