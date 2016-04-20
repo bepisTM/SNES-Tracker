@@ -5,8 +5,8 @@
 #include "gme/Spc_Dsp_Register_Map_Interface.h"
 #include "Notes.h"
 #include "platform.h"
-#include "Menu_Bar.h"
-
+#include "stub.h"
+#include "Midi.h"
 void Instr_Tab::activate()
 {
   // register callback
@@ -19,10 +19,8 @@ void Instr_Tab::deactivate()
   STUB("Instr_Tab::deactivate");
 }
 
-void Instr_Tab::midi_callback( double deltatime, std::vector< unsigned char > *message, void *userData )
+int Instr_Tab::midi_callback(double deltatime, jdkmidi::MIDIMessage *m, void *userData)
 {
-  Midi *midi = (Midi*) userData;
-
   // Send the note to the main app
   if (m->IsNoteOn())
   {
@@ -55,7 +53,8 @@ void Instr_Tab::midi_callback( double deltatime, std::vector< unsigned char > *m
 }
 
 
-Instr_Tab::Instr_Tab() : 
+Instr_Tab::Instr_Tab(int x, int y) :
+start_x(x), start_y(y),
 octave("octave"),
 voice("voice")
 {
@@ -120,8 +119,8 @@ void Instr_Tab::run()
 
 void Instr_Tab::one_time_draw()
 {
-  int x = BaseD::menu_bar->tabs.rect.x, o_x=x;
-  int y = BaseD::menu_bar->tabs.rect.y + BaseD::menu_bar->tabs.rect.h + (4*TILE_HEIGHT);
+  int x = start_x, o_x=x;
+  int y = start_y;
   int o_y = y;
 
     voice.label.rect.x = x;

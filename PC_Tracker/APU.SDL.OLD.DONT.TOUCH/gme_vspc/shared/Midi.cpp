@@ -3,10 +3,14 @@
 #include "Notes.h"
 #include "Midi_Context.h"
 
-void mycallback( double deltatime, std::vector< unsigned char > *message, void *userData )
+/*
+We want to be able to register a MIDI callback of any nature
+*/
+
+static void rtmidi_callback( double deltatime, std::vector< unsigned char > *message, void *userData )
 {
   Midi *midi = (Midi*) userData;
-  midi->internal_callback(deltatime, &message);
+  midi->internal_callback(deltatime, message);
 }
 
 void Midi::setCallback(MidiCallback callback, void *userData/*=0*/)
@@ -15,21 +19,28 @@ void Midi::setCallback(MidiCallback callback, void *userData/*=0*/)
   this->userData = userData;
 }
 
-void Midi::internal_callback(double &deltatime, std::vector< unsigned char > **message)
+int Midi::internal_callback(double &deltatime, std::vector< unsigned char > *message)
 {
-  unsigned int nBytes = (*message)->size();
+  unsigned int nBytes = message->size();
   for ( unsigned int i=0; i<nBytes; i++ )
   {
-    if( parser.Parse( (uchar)(*message)->at(i), &msg ) )
-    {     
-      if( msg.IsSysEx() )
+    if( parser.Parse( (uchar)message->at(i), &msg ) )
+    {
+      if (callback)
       {
-        PrintSysEx( stderr, parser.GetSystemExclusive() );
-      }     
+        callback(deltatime, &msg, userData);
+      }
       else
       {
-        PrintMsg( stderr, &msg );
-      }         
+        if( msg.IsSysEx() )
+        {
+          PrintSysEx( stderr, parser.GetSystemExclusive() );
+        }     
+        else
+        {
+          PrintMsg( stderr, &msg );
+        }
+      }        
     }     
     //fprintf(stderr, "Byte %d = 0x%02X, ", i, (int)message->at(i) );
   }
@@ -129,7 +140,7 @@ Midi::Midi() : parser(32*1024)
     // Set our callback function.  This should be done immediately after
     // opening the port to avoid having incoming messages written to the
     // queue instead of sent to the callback function.
-    in.setCallback( &mycallback, this);
+    in.setCallback( &rtmidi_callback, this);
 
     // Don't ignore sysex, timing, or active sensing messages.
     in.ignoreTypes( false, false, false );

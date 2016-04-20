@@ -1,7 +1,6 @@
 #include "Dsp_Tab.h"
 #include "utility.h"
 #include "platform.h"
-#include "Menu_Bar.h"
 
 uint16_t Dsp_Tab::dir_ram_addr;
 uint16_t *Dsp_Tab::dir;
@@ -49,8 +48,9 @@ int Dsp_Tab::Loop_Clickable::toggle_loop(void *index)
   return 0;
 }
 
-Dsp_Tab::Dsp_Tab() : 
-screw_clickable("Screw Around", toggle_screw, this, Colors::nearblack)
+Dsp_Tab::Dsp_Tab(int x, int y) : 
+screw_clickable("Screw Around", toggle_screw, this, Colors::nearblack),
+start_x(x), start_y(y)
 {
   clear_used_srcn();
   /*for (int i=0; i < NUM_DIR_ENTRIES_DISPLAYED; i++)
@@ -61,10 +61,10 @@ screw_clickable("Screw Around", toggle_screw, this, Colors::nearblack)
 
 int Dsp_Tab::toggle_screw(void *dsp_win)
 {
-  Dsp_Tab *Dsp_Tab = (Dsp_Tab*)dsp_win;
+  Dsp_Tab *dsp_tab = (Dsp_Tab*)dsp_win;
   //*is_screwing = !*is_screwing;
-  Dsp_Tab->is_screwing = !Dsp_Tab->is_screwing;
-  if (Dsp_Tab->is_screwing)
+  dsp_tab->is_screwing = !dsp_tab->is_screwing;
+  if (dsp_tab->is_screwing)
   {
     BaseD::Hack_Spc::pause_spc();
   }
@@ -216,8 +216,8 @@ void Dsp_Tab::run()
   uint8_t srcn[MAX_VOICES];
   // non-obvious how the follow is used.. but i dynamically log certain coordinates
   //to help create the layout o_* means original
-  int i = BaseD::menu_bar->tabs.rect.y + BaseD::menu_bar->tabs.rect.h + TILE_HEIGHT*5, o_i = i, remember_i1, remember_i2, remember_i3, remember_i4;
-  int x = 10, /*o_x = x,*/ remember_x = 10, remember_x2;
+  int i = start_x, o_i = i, remember_i1, remember_i2, remember_i3, remember_i4;
+  int x = start_y/*10*/, /*o_x = x,*/ remember_x = 10, remember_x2;
   // start drawing from 10,10
 
   /* Because we are dynamically generating the layout, we don't write the

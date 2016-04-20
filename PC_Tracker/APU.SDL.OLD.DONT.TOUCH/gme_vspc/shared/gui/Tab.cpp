@@ -13,13 +13,11 @@ void Tab::draw(SDL_Surface *screen/*=Render_Context::screen*/, bool active/*=fal
 
   if (active) 
   {
-    //DEBUGLOG("weewr");
     bg_color = &Colors::Interface::color[Colors::Interface::active_tab_bg];
     fg_color = &Colors::Interface::color[Colors::Interface::active_tab_fg];
   }
   else
   {
-    //DEBUGLOG("insactive");
     bg_color = &Colors::Interface::color[Colors::Interface::inactive_tab_bg];
     fg_color = &Colors::Interface::color[Colors::Interface::inactive_tab_fg];
   }

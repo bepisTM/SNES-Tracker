@@ -4,9 +4,9 @@
 #include "Screen.h"
 #include "sdl_userevents.h"
 #include "gui/Cursors.h"
-
+#include "stub.h"
 Debugger::Debugger(int &argc, char **argv) :
-main_window(argc,argv)
+main_window(SCREEN_WIDTH, SCREEN_HEIGHT, APP_NAME_VERSION)
 {
   // SDL STUFF!!
   Colors::precompute(main_window.rc.screen);
@@ -181,6 +181,7 @@ void Debugger::handle_events()
             if (ev.window.windowID == Render_Context::windowID)
             {
               // OFF context menus
+              STUB("FIXME");
               main_window.menu_bar.context_menus.deactivate_all();
             }
           }

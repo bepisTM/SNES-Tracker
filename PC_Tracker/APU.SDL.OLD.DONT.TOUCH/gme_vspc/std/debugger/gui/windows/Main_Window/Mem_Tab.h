@@ -26,6 +26,7 @@ struct Mem_Tab : public BaseD,
 public Player_Context,
 public Experience
 {
+  Mem_Tab();
   void scroll_track_tags();
   struct Scroll_Tag
   {

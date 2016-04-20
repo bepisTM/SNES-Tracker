@@ -3,7 +3,6 @@
 #include "gui/Clickable_Text.h"
 #include "BaseD.h"
 #include "gui/Expanding_List.h"
-#include "Main_Window.h"
 #include "Options_Window.h"
 #include "gui/Spc_Export_Window.h"
 struct Menu_Bar
@@ -76,7 +75,6 @@ struct Menu_Bar
     static int restart_current_track (void *data);
     static int prev_track (void *data);          
     static int next_track (void *data); 
-    //static int test(void *data) { fprintf(stderr, "test"); return 0; } 
     static int create_profile(void *data);
 
     Expanding_List menu;
@@ -106,7 +104,7 @@ struct Menu_Bar
     Context_Menu_Item menu_items[7] = 
     {
       {"Window",        true,  NULL,  NULL},
-      {"Original Size", true,  restore_window_size, NULL},
+      //{"Original Size", true,  restore_window_size, NULL},
       /*{"-------------", true, NULL, NULL},
       {"Memory",        true,  Main_Window::switch_to_memory,  NULL},
       {"DSP",           true,  Main_Window::switch_to_dsp,  NULL},
@@ -130,7 +128,6 @@ struct Menu_Bar
     Context_Menus() {}
 
     bool is_anything_active();
-    
 
     bool check_left_click_activate(int &x, int &y, const Uint8 &button=0, const SDL_Event *ev=NULL);
     int receive_event(SDL_Event &ev);

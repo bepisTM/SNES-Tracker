@@ -351,11 +351,6 @@ int Mem_Tab::receive_event(SDL_Event &ev)
         player->filter_is_active = !player->filter_is_active;
         fprintf(stderr, "filter_is_active = %d", player->filter_is_active);
       }
-      else if (scancode == SDLK_SPACE)
-      {
-        //fprintf(stderr, "pause ")
-        BaseD::toggle_pause();
-      }
       else if (scancode == SDLK_r)
       {
         restart_current_track();

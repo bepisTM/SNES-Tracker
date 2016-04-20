@@ -10,18 +10,15 @@
 #include "utility.h"
 #include "ADSR.h"
 #include "gui/Expanding_List.h"
-
-
-
-
+#include "Midi.h"
 
 struct Instr_Tab: public BaseD,
 public Experience
 {
-  void midi_callback( double deltatime, std::vector< unsigned char > *message, void *userData );
+  int midi_callback(double deltatime, jdkmidi::MIDIMessage *m, void *userData);
   Uint32 mytime;
   bool started=false;
-  Instr_Tab();
+  Instr_Tab(int x, int y);
   void activate();
   void deactivate();
   void run();
@@ -95,5 +92,9 @@ public Experience
   int submode=NONE;
   
   bool is_first_run=true;
+  // midi
+  Uint8 last_note_on=0;
+
+  int start_x,start_y;
 };
 

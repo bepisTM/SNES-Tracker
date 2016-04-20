@@ -1,5 +1,6 @@
 Refactor Todo
 -------------
+00C midi last_note_on should be logged in a "core callback"
 00B include appropriate header locations
 00A WTF is Mem_Tab.c i = 32 + SCREEN_Y_OFFSET in draw()
 009 Put widget processing code into the widgets themselves

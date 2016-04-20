@@ -22,7 +22,7 @@ public Experience
 
   bool is_srcn_used(Uint8 dirnum);
   void do_loop_point_color(int index, Uint8* brr_sample, Uint32 active_color, Uint32 inactive_color);
-  Dsp_Tab();
+  Dsp_Tab(int x, int y);
   void run();
   void draw();
   int receive_event(SDL_Event &ev);
@@ -231,6 +231,8 @@ public Experience
   uint8_t used_srcn_voice[MAX_SRCN_ENTRIES];
   //
   bool is_first_run=true;
+
+  int start_x, start_y;
 
 private:
   void init_gen_dsp_clickable(char *str, int&, int&);

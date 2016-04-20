@@ -25,10 +25,10 @@ OBJCC=$(CROSS_COMPILE)g++
 debug = -g
 optimize = -O3
 
-debugger_CPPFLAGS=$(debug) -I. -I$(SHARED_DIR) -I$(PROJ_DIR)/rtmidi -I$(PROJ_DIR)/NativeFileDialog/include\
--Idebugger/memory -Idebugger/content_areas -Idebugger/windows/Options_Window\
--Idebugger/gui/windows/Main_Window -Idebugger/gui/windows/Main_Window/memory\
--Idebugger/gui/windows/Options_Window\
+debugger_CPPFLAGS=$(debug) -I. -I$(SHARED_DIR) -I$(PROJ_DIR)/rtmidi -I$(PROJ_DIR)/NativeFileDialog/include \
+-Idebugger/memory -Idebugger/content_areas -Idebugger/windows/Options_Window \
+-Idebugger/gui/windows/Main_Window -Idebugger/gui/windows/Main_Window/memory \
+-Idebugger/gui/windows/Options_Window \
 -funroll-loops -Wall -Idebugger -Wall
 
 prefix ?= /opt/local

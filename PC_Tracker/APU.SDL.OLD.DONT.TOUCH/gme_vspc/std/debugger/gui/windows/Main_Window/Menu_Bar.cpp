@@ -8,6 +8,8 @@
 
 #include "gme/Wave_Writer.h"
 
+#include "stub.h"
+
 int Menu_Bar::Edit_Context::open_options_window(void *data)
 {
   DEBUGLOG("open_options_window()\n");
@@ -171,7 +173,8 @@ int Menu_Bar::Track_Context::create_profile(void *data)
 
 int Menu_Bar::Window_Context::restore_window_size(void *nada)
 {
-  SDL_SetWindowSize(BaseD::sdlWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
+  STUBBED("restore_window_size");
+  //SDL_SetWindowSize(BaseD::sdlWindow, SCREEN_WIDTH, SCREEN_HEIGHT);
   return 0;
 }
 

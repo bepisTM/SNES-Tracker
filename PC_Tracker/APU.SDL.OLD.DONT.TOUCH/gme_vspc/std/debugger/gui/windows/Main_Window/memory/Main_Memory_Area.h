@@ -19,7 +19,7 @@ int solo_sample(void *data);
 struct Main_Memory_Area : Memory
 {
 public:
-  Main_Memory_Area(Mouse_Hexdump_Area *mouse_hexdump_area, uint16_t *dir);
+  Main_Memory_Area(Mouse_Hexdump_Area *mouse_hexdump_area);
 
   void set_addr(int i);
   void set_addr_from_cursor(int x, int y);

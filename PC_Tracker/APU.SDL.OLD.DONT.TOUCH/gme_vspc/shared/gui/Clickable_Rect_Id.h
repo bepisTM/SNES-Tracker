@@ -1,7 +1,7 @@
 #pragma once
 #include "sdlfont.h"
 #include "Render_Context.h"
-
+#include "Render_Collection.h"
 
 struct Clickable_Rect_Id : public Render_Context
 {
@@ -13,9 +13,14 @@ struct Clickable_Rect_Id : public Render_Context
   SDL_Rect rect;
   void do_thing(void *newdata=NULL);
   int (*action)(void* data, int id);
-  void *data;
+  
 
   int id;
 private:
 	static int id_count;
+  void *data;
+
+  // should go into an impl-specific class
+  //Render_Collection *rc;
+
 };

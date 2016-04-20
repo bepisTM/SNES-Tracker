@@ -12,7 +12,8 @@
 
 struct Midi : public App_Settings_Context
 {
-  typedef void (*MidiCallback)( double timeStamp, std::vector<unsigned char> *message, void *userData);
+  typedef int (*MidiCallback)( double timeStamp, jdkmidi::MIDIMessage *m, void *userData);
+  //typedef int (*MidiCallback)( double timeStamp, std::vector<unsigned char> *message, void *userData);
 
   Midi();
   ~Midi();
@@ -20,7 +21,7 @@ struct Midi : public App_Settings_Context
   void PrintSysEx( FILE *f, jdkmidi::MIDISystemExclusive *ex );
   void PrintMsg( FILE *f, jdkmidi::MIDIMessage *m );
 
-  void internal_callback(double &deltatime, std::vector< unsigned char > **message);
+  int internal_callback(double &deltatime, std::vector< unsigned char > *message);
 
   /* RtMidi Stuffz */
   std::map<int, std::string> apiMap;
@@ -30,10 +31,10 @@ struct Midi : public App_Settings_Context
   bool is_available=true;
 
   void setCallback(MidiCallback callback, void *userData = 0 );
-  MidiCallback callback;
-  void *userData;
+  MidiCallback callback = NULL;
+  void *userData = NULL;
   //RtMidiOut *midiout = 0;
-  Uint8 last_note_on=0;
+  //Uint8 last_note_on=0;
 
   // jdkmidi stuffz
   jdkmidi::MIDIParser parser;
