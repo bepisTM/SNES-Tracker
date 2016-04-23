@@ -61,6 +61,8 @@ In order to compile, certain library dependencies must be installed on your syst
 
 ### Internal Dependencies
 
+The following are already packaged with SNES Tracker.
+
 - libjdkmidi (packaged internally -- WIP getting build scripts to automate building this)
 - rtmidi (packaged internally)
 - NativeFileDialog (packaged internally, and modified for cross-platform compilation)
