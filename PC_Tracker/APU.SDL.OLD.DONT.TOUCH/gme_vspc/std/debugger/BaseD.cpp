@@ -9,6 +9,8 @@ uint8_t *BaseD::IAPURAM;*/
 #include <getopt.h>
 char BaseD::tmpbuf[500];
 
+Window** BaseD::windows = NULL;
+
 // this doesn't belong in BaseD
 bool BaseD::Profile::is_profiling=false;
 BaseD::Profile * BaseD::tmp_profile=NULL;
@@ -33,7 +35,7 @@ char BaseD::now_playing[1024];
 //bool BaseD::is_onetime_draw_necessary=false;
 
 
-//Experience * BaseD::exp=NULL;
+Experience * BaseD::exp=NULL;
 
 //Menu_Bar * BaseD::menu_bar=NULL;
 // Options_Window * BaseD::options_window=NULL;

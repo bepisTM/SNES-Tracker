@@ -24,12 +24,14 @@ main_window(SCREEN_WIDTH, SCREEN_HEIGHT, APP_NAME_VERSION)
   BaseD::cursors = &cursors;
   exp = &main_window;
 
-  //window_map.insert( std::pair<Uint32, Window*>())
+  //windows.insert( std::pair<Uint32, Window*>())
   int i=0;
-  window_map[i++] = &main_window;
-  window_map[i++] = &options_window;
-  window_map[i++] = &spc_export_window;
-  window_map[i] = NULL;
+  windows[i++] = &main_window;
+  windows[i++] = &options_window;
+  windows[i++] = &spc_export_window;
+  windows[i] = NULL;
+  BaseD::windows = windows;
+  BaseD::exp = exp;
   
   // Get current display mode of all displays.
   //for(i = 0; i < SDL_GetNumVideoDisplays(); ++i){
@@ -84,10 +86,10 @@ void Debugger::run()
   sub_window_experience = NULL;
   for (int i=0; i < NUM_WINDOWS; i++)
   {
-    //window_map[i]->hide();
+    //windows[i]->hide();
     // DO THIS because otherwise the hidden windows will blink
     // quickly on exit
-    //window_map[i]->~Window();
+    //windows[i]->~Window();
   }
 
   if (!player->is_paused() && player->track_started)
@@ -193,13 +195,13 @@ void Debugger::handle_events()
             sub_window_experience = NULL;
             for (int i=0; i < NUM_WINDOWS; i++)
             {
-              if (ev.window.windowID == window_map[i]->windowID)
+              if (ev.window.windowID == windows[i]->windowID)
               {
-                if (window_map[i]->oktoshow)
+                if (windows[i]->oktoshow)
                 {
-                  DEBUGLOG("Window_map %d gained experience. :D\n", i);
-                  sub_window_experience = (Experience *)window_map[i];
-                  //window_map[i]->raise();
+                  DEBUGLOG("windows %d gained experience. :D\n", i);
+                  sub_window_experience = (Experience *)windows[i];
+                  //windows[i]->raise();
                 }
                 break;
               }
@@ -211,11 +213,11 @@ void Debugger::handle_events()
             SDL_Log("Window %d shown", ev.window.windowID);
             for (int i=0; i < NUM_WINDOWS; i++)
             {
-              if (ev.window.windowID == window_map[i]->windowID)
+              if (ev.window.windowID == windows[i]->windowID)
               {
-                if (!window_map[i]->oktoshow)
+                if (!windows[i]->oktoshow)
                 {
-                  window_map[i]->hide();
+                  windows[i]->hide();
                   /* maybe right here, instead of raising the main window, we should
                     have a history of displayed windows.. and the last one should be raised.
                   */
@@ -225,9 +227,9 @@ void Debugger::handle_events()
                 else
                 {
                   sub_window_experience = NULL;
-                  DEBUGLOG("Window_map %d gained experience. :D\n", i);
-                  sub_window_experience = (Experience *)window_map[i];
-                  window_map[i]->raise();
+                  DEBUGLOG("windows %d gained experience. :D\n", i);
+                  sub_window_experience = (Experience *)windows[i];
+                  windows[i]->raise();
                 }
                 break;
               }
@@ -249,9 +251,9 @@ void Debugger::handle_events()
             {
               for (int i=0; i < NUM_WINDOWS; i++)
               {
-                if (ev.window.windowID == window_map[i]->windowID)
+                if (ev.window.windowID == windows[i]->windowID)
                 {
-                  window_map[i]->hide();
+                  windows[i]->hide();
                   // maybe right here, instead of raising the main window, we should
                   //  have a history of displayed windows.. and the last one should be raised.
 

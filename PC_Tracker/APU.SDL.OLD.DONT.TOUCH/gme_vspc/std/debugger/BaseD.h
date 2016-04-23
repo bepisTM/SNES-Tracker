@@ -7,6 +7,7 @@
 #include "Voice_Control.h"
 #include "My_Nfd.h"
 #include "gui/Cursors.h"
+#include "gui/Window.h"
 
 // struct Main_Window;
 // struct Dsp_Window;
@@ -18,6 +19,8 @@
 struct BaseD : public Render_Context, public Player_Context
 {
   static char tmpbuf[500];
+
+  static Window* *windows;
 
   // These should go somewhere else problly
   struct Hack_Spc
@@ -102,7 +105,7 @@ struct BaseD : public Render_Context, public Player_Context
     char **playlist = NULL;
   } g_cfg;
 
-  // static Experience *exp;
+  static Experience *exp;
   // static Main_Window *main_window;
   // static Dsp_Window *dsp_window;
   // static Instrument_Window *instr_window;

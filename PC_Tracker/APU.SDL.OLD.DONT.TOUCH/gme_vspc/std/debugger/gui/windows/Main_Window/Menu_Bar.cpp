@@ -13,24 +13,14 @@
 int Menu_Bar::Edit_Context::open_options_window(void *data)
 {
   DEBUGLOG("open_options_window()\n");
-  //
-  BaseD::options_window->show();
-  BaseD::options_window->raise();
-  //BaseD::options_window->raise();
-  // there's a problem raising the window immediately after showing it... 
-  // So I raise it in the event loop when the window focus change event happens
-  
-  //SDL_Thread *thread;
-  //SDL_CreateThread(&Menu_Bar::Edit_Context::open_options_window_in_thread, "Options_Window_Thread", NULL);
+  BaseD::windows[Debugger::Windows::option]->show();
+  BaseD::windows[Debugger::Windows::option]->raise();
   return 0;
 }
 
 int Menu_Bar::Edit_Context::open_options_window_in_thread(void *data)
 {
   DEBUGLOG("open_options_window_in_thread()\n");
-  
-  
-  //SDL_Delay(5000);
   return 0;
 }
 
@@ -46,16 +36,15 @@ void Menu_Bar::draw(SDL_Surface *screen)
   context_menus.draw(screen);
 }
 
-
-
 void Menu_Bar::Track_Context::draw(SDL_Surface *screen)
 {
   Clickable_Text *ct = (Clickable_Text*) &menu_items[1].clickable_text;
-  if (BaseD::player->is_paused() || (BaseD::exp == BaseD::instr_window && BaseD::instr_window->start_stop.is_started) )
+  Main_Window *mw = BaseD::windows[Debugger::Windows::main];
+  if (BaseD::player->is_paused() || 
+     (mw->exp == mw->instr_tab && 
+      mw->instr_tab->start_stop.is_started))
   {
     ct->str = "play";
-    //ct->str.clear();
-    //ct->str.append( "resume" );
   }
   else 
   {
@@ -78,7 +67,6 @@ int Menu_Bar::File_Context::open_spc(void *data)
 
 int Menu_Bar::File_Context::export_spc(void *data)
 {
-  //BaseD::spc_export_window->init();
   BaseD::spc_export_window->show();
   
   return 0;
@@ -170,7 +158,6 @@ int Menu_Bar::Track_Context::create_profile(void *data)
   return 0;
 }
 
-
 int Menu_Bar::Window_Context::restore_window_size(void *nada)
 {
   STUBBED("restore_window_size");
@@ -193,9 +180,7 @@ void Menu_Bar::Context_Menus::preload(int x/*=x*/, int y/*=y*/)
   x +=  ( track_context.menu_items[0].clickable_text.str.length() * CHAR_WIDTH ) + CHAR_WIDTH*2;
 
   window_context.menu.preload(x,y);
-  x +=  ( window_context.menu_items[0].clickable_text.str.length() * CHAR_WIDTH ) + CHAR_WIDTH*2;
-
-  
+  x +=  ( window_context.menu_items[0].clickable_text.str.length() * CHAR_WIDTH ) + CHAR_WIDTH*2;  
 }
 
 bool Menu_Bar::Context_Menus::check_left_click_activate(int &x, int &y, const Uint8 &button, const SDL_Event *ev)

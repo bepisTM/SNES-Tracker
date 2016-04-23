@@ -7,8 +7,6 @@
 #include "gui/Spc_Export_Window.h"
 struct Menu_Bar
 {
-  Menu_Bar();
-
   bool is_first_run=true;
   void draw(SDL_Surface *screen);
   int receive_event(SDL_Event &ev);
@@ -113,19 +111,18 @@ struct Menu_Bar
     };
   };
   enum
-    {
-      EVENT_INACTIVE=0,
-      EVENT_ACTIVE=1,
-      EVENT_FILE,
-      EVENT_TRACK,
-      EVENT_WINDOW
-    };
+  {
+    EVENT_INACTIVE=0,
+    EVENT_ACTIVE=1,
+    EVENT_FILE,
+    EVENT_TRACK,
+    EVENT_WINDOW
+  };
 
   struct Context_Menus
   {
     int x = 10, y = 10;
     int h = CHAR_HEIGHT;
-    Context_Menus() {}
 
     bool is_anything_active();
 

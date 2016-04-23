@@ -17,7 +17,6 @@ App_Settings::App_Settings(File_System *file_system) : file_system(file_system)
   if (!file_system->is_loaded)
     file_system->init();
   load();
-  App_Settings_Context::app_settings = this;
 }
 App_Settings::~App_Settings()
 {

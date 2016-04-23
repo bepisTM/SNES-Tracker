@@ -1,5 +1,9 @@
 Refactor Todo
 -------------
+00F take out Music_Player / Samplerate stuff from App class, it belongs in a composition
+00E classes should not internally assign themselves to Context classes. That is an external impl detail
+00D analyze a possible API for Music_Player, since I know I am "direct-accessing" certain variables
+externally.
 00C midi last_note_on should be logged in a "core callback"
 00B include appropriate header locations
 00A WTF is Mem_Tab.c i = 32 + SCREEN_Y_OFFSET in draw()
@@ -17,8 +21,8 @@ loaded.
 007 Main_Memory_Area and Mouse_Hexdump_Area classes should both tap into a "back-end" class that
 is the sync between the two.
 006 Make Tab_Collection class
-005 automatic tab "active" thing..
-004 Careful, alot of mem_tab references are still referring to main_window
+005 OK automatic tab "active" thing..
+004 OK Careful, alot of mem_tab references are still referring to main_window
 003 (later) Keyboard Shortcuts Modular per GUI interface
   \-> This could be modular per Experience
 002 (later) Remove SDL implementation from BRR class

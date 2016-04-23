@@ -32,7 +32,7 @@ double Audio::calculate_fullscale_db_from_postgain_sample(int *sample, double mi
 
 Audio::Audio()
 {
-  Audio_Context::audio = this;
+  
 }
 
 Audio::Devices::Devices()

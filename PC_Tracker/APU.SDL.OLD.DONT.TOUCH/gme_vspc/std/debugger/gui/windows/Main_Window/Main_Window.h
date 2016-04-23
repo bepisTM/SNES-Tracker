@@ -35,7 +35,7 @@ public:
 
   Experience *exp;
 
-  Menu_Bar menu_bar;
+  Menu_Bar *menu_bar
 
   struct Tabs
   {

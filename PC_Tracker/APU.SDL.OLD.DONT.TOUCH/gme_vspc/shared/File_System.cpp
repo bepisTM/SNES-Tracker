@@ -13,8 +13,7 @@ void error( const char* str )
 
 File_System::File_System()
 {
-  File_System_Context::file_system = this;
-  //this->init();
+  
 }
 File_System::~File_System()
 {

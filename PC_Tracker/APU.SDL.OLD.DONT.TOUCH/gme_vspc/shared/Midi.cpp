@@ -157,6 +157,4 @@ Midi::Midi() : parser(32*1024)
   } catch ( RtMidiError &error ) {
     error.printMessage();
   }
-
-  Midi_Context::midi = this;
 }

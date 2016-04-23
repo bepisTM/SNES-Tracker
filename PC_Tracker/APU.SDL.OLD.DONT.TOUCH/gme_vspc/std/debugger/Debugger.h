@@ -26,15 +26,19 @@ public:
   void handle_events();
 
   SDL_DisplayMode monitor_display_mode;
-  //
-  //std::map<SDL_WindowID_Type, Window *> window_map;
+
   Experience *exp = NULL, *sub_window_experience = NULL;
   
   Main_Window main_window;
   Options_Window options_window;
   Spc_Export_Window spc_export_window;
-  static const int NUM_WINDOWS = 3;
-  Window *window_map[NUM_WINDOWS+1];  // there's a REASON for +1 (extra NULL item)
+  enum Windows {
+    main=0,
+    options,
+    spc_export,
+    NUM_WINDOWS
+  };
+  Window *windows[NUM_WINDOWS+1];  // there's a REASON for +1 (extra NULL item)
 
   Cursors cursors;
 };

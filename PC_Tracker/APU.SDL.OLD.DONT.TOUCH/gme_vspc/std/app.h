@@ -1,4 +1,4 @@
-#include "SDL.h"
+#include "sdl.h"
 #include "gme/player/Music_Player.h"
 #include "Debugger.h"
 #include "Midi_Context.h"
@@ -7,7 +7,6 @@
 #include "App_Settings_Context.h"
 #include "Audio.h"
 #include "gui/Cursors.h"
-//#include "Tracker/Tracker.h"
 
 class App
 {
@@ -15,17 +14,29 @@ public:
   App(int &argc, char **argv, int samplerate=44100);
   ~App();
   void run();
-  int init();
-  int init_sdl(SDL_Window **, int,int);
   
   App_Settings *app_settings;
-  Debugger *debugger;
-  Music_Player *player;
   
-  File_System *file_system;
-  Midi *midi;
   Audio *audio;
+  File_System *file_system;
 
 private:
   int init_sdl();
+};
+
+class MidiApp
+{
+public:
+  Midi_App()
+
+private:
+  App app;
+  Midi midi;
+};
+
+class Spc_App
+{
+private:
+  Midi_App midi_app;
+  Music_Player *player;
 };
