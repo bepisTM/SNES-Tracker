@@ -9,4 +9,7 @@
 unrar
 std.app
 std
+## libjdkmidi
 out.mac/
+out.win/
+out.linux/
