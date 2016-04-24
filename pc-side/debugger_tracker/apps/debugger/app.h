@@ -21,7 +21,6 @@ public:
   File_System *file_system;
 
 private:
-  int init_sdl();
 };
 
 class MidiApp
